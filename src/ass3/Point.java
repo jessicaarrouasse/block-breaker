@@ -44,9 +44,8 @@ public class Point {
      * @return true if the points are equal, false otherwise
      */
     public boolean equals(Point other) {
-
-        return this.x == other.getX() && this.y == other.getY();
-
+        double epsilon = 0.001;
+        return Math.abs(this.x - other.getX()) < epsilon && Math.abs(this.y - other.getY()) < epsilon;
     }
 
     /**
@@ -84,14 +83,14 @@ public class Point {
      * @return true if the point is in the line, false otherwise
      */
     public boolean isInLimits(Line line) {
-
-        if (this.x > Math.max(line.start().getX(), line.end().getX())
-                || this.x < Math.min(line.start().getX(), line.end().getX())) {
+        double epsilon = 0.001;
+        if (this.x > Math.max(line.start().getX(), line.end().getX()) + epsilon
+                || this.x < Math.min(line.start().getX(), line.end().getX()) - epsilon) {
             return false;
         }
 
-        if (this.y > Math.max(line.start().getY(), line.end().getY())
-                || this.y < Math.min(line.start().getY(), line.end().getY())) {
+        if (this.y > Math.max(line.start().getY(), line.end().getY()) + epsilon
+                || this.y < Math.min(line.start().getY(), line.end().getY()) - epsilon) {
             return false;
         }
 

@@ -43,12 +43,14 @@ public class Block implements Collidable, Sprite {
 		double dy = currentVelocity.getDy();
 		double xUpper = this.position.getUpperLeft().getX();
 		double width = this.position.getWidth();
+		double epsilon = 0.001;
 		
 		if (hitPoints > 0) {
 			this.hitPoints--;
 		}
 		
-		if (collisionPoint.getX() == xUpper || collisionPoint.getX() == xUpper + width) {
+		if ((collisionPoint.getX() < xUpper + epsilon && collisionPoint.getX() > xUpper - epsilon) ||
+				(collisionPoint.getX() < xUpper + width + epsilon && collisionPoint.getX() > xUpper + width - epsilon)) {
 			return new Velocity (-dx,dy); 
 		} else {
 			return new Velocity (dx,-dy); 
@@ -68,7 +70,9 @@ public class Block implements Collidable, Sprite {
 		int h = (int)this.position.getHeight();
         surface.setColor(this.color);
 		surface.fillRectangle(x, y, w, h);
-        surface.setColor(Color.WHITE);																																																																									
+		surface.setColor(Color.BLACK);
+		surface.drawRectangle(x, y, w, h);
+        surface.setColor(Color.WHITE);
 		surface.drawText(x + (w / 2), y + (h / 2), this.hitPointsToString(), 16);
 
     }

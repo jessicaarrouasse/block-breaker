@@ -45,7 +45,7 @@ public class GameEnvironment {
 		    }
 		   
 			for (CollisionInfo c : collisions) {
-				if (trajectory.start().distance(c.collisionPoint()) < minDist) {
+				if (trajectory.start().distance(c.collisionPoint()) <= minDist) {
 					closest = c;
 					minDist = trajectory.start().distance(c.collisionPoint());
 				}

@@ -28,15 +28,15 @@ public class Paddle implements Sprite, Collidable {
 	
 	public void moveLeft() {
 		Point upperLeft = this.position.getUpperLeft();
-		if (upperLeft.getX() >= 0) {
-			this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() - 10);
+		if (upperLeft.getX() >= 20) {
+			this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() - 20);
 		}
 	}
 	
 	public void moveRight() {
 		Point upperLeft = this.position.getUpperLeft();
-		if (upperLeft.getX() + 100 <= bottomRight.getX()) {
-			this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() + 10);
+		if (upperLeft.getX() + 100 <= bottomRight.getX() - 20) {
+			this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() + 20);
 		}
 	}
 	
@@ -50,22 +50,26 @@ public class Paddle implements Sprite, Collidable {
 	public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
 		double dx = currentVelocity.getDx();
 		double dy = currentVelocity.getDy();
+		double epsilon = 0.001;
 		double xUpper = this.position.getUpperLeft().getX();
 		double width = this.position.getWidth();
 		
-		if (collisionPoint.getX() == xUpper || collisionPoint.getX() == xUpper + width) {
+		if ((collisionPoint.getX() < xUpper + epsilon
+				&& collisionPoint.getX() > xUpper - epsilon)
+				|| (collisionPoint.getX() < xUpper + width + epsilon
+				&& collisionPoint.getX() > xUpper + width - epsilon)) {
 			return new Velocity (-dx,dy); 
 		} else {
-			if (collisionPoint.getX() < xUpper + this.zones[0]) {
-				return Velocity.fromAngleAndSpeed(-150, 5);
-			} else if (collisionPoint.getX() < xUpper + this.zones[1]) {
-				return Velocity.fromAngleAndSpeed(-120, 5);
+			if (collisionPoint.getX() <= xUpper + this.zones[0]) {
+				return Velocity.fromAngleAndSpeed(-150, 10);
+			} else if (collisionPoint.getX() <= xUpper + this.zones[1]) {
+				return Velocity.fromAngleAndSpeed(-120, 10);
 			} else if (collisionPoint.getX() < xUpper + this.zones[2]) {
-				return Velocity.fromAngleAndSpeed(-90, 5);
+				return Velocity.fromAngleAndSpeed(-90, 10);
 			}  else if (collisionPoint.getX() < xUpper + this.zones[3]) {
-				return Velocity.fromAngleAndSpeed(-60, 5);
+				return Velocity.fromAngleAndSpeed(-60, 10);
 			} else {
-				return Velocity.fromAngleAndSpeed(-30, 5);
+				return Velocity.fromAngleAndSpeed(-30, 10);
 			}
 		}
 	}
@@ -73,7 +77,7 @@ public class Paddle implements Sprite, Collidable {
 	//Sprite
 	@Override
 	public void drawOn(DrawSurface surface) {
-		surface.setColor(Color.GRAY);
+		surface.setColor(Color.ORANGE);
         surface.fillRectangle((int)this.position.getUpperLeft().getX(), 
       		  (int)this.position.getUpperLeft().getY(), 
       		  (int)this.position.getWidth(), 

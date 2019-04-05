@@ -31,6 +31,9 @@ public class Rectangle {
 	   public List<Point> intersectionPoints(Line line){
 		   double x = this.upperLeft.getX();
 		   double y = this.upperLeft.getY();
+		   if (line.start().getY() >= 645 && line.start().getX() >= 1104 && this.getWidth() == 1200) {
+			   System.out.println("vcxd");
+		   }
 		   List<Point> intersections = new ArrayList<Point>();
 		   Line[] sides = new Line[4];
 		   sides[0] = new Line (x, y, x + this.width, y);

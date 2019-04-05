@@ -128,7 +128,9 @@ public class Line {
     public Point intersectionWith(Line other) {
         double a1 = this.getSlope();
         double a2 = other.getSlope();
-
+        if (this.start().getY() <= 100 && this.start().getY() >= 60 && this.start().getX() >= 1104 && other.start().getX() == 1180 && this.end().getX()>=1180) {
+            System.out.println("vcxd");
+        }
         // for parallel and nested lines
         if (a1 == a2) {
             //if one of the lines is actually a point
@@ -187,6 +189,9 @@ public class Line {
     // start of the line.
     public Point closestIntersectionToStartOfLine(Rectangle rect) {
 		List<Point> intersections = rect.intersectionPoints(this);
+        if (this.start().getY() >= 645 && this.start().getX() >= 1104 && rect.getWidth() == 1200) {
+            System.out.println("vcxd");
+        }
 		double minDist = this.length();
 		Point minP = null;
 		if(intersections.isEmpty()) {
@@ -194,13 +199,16 @@ public class Line {
 		}
 		else {
 			for (Point intersec : intersections) {
-				if (this.start.distance(intersec) < minDist) {
+				if (this.start.distance(intersec) <= minDist) {
 					minP = intersec;
 					minDist = this.start.distance(intersec);
 				}
 			}
 		}
-		return minP;
-    }    
+		if (minP != null && !minP.equals(this.start())) {
+		    return minP;
+        }
+		return null;
+    }
 
 }
