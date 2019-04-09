@@ -78,7 +78,7 @@ public class Game {
 
         // Create the velocities of the balls
         Velocity[] velocities = {
-                Velocity.fromAngleAndSpeed(359, BALL_SPEED),
+                Velocity.fromAngleAndSpeed(-45, BALL_SPEED),
                 Velocity.fromAngleAndSpeed(225, BALL_SPEED),
         };
 
