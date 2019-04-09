@@ -1,12 +1,11 @@
 package ass3;
 
 /**
- * Point class contains x and y.
+ * Point class.
  *
- * @version 1.1
+ * @version 1.0
  *
  * @author Jessica Arrouasse 328786348
- * username: anidjaj
  */
 
 public class Point {
@@ -45,8 +44,9 @@ public class Point {
      * @return true if the points are equal, false otherwise
      */
     public boolean equals(Point other) {
-        double epsilon = 0.001;
-        return Math.abs(this.x - other.getX()) < epsilon && Math.abs(this.y - other.getY()) < epsilon;
+
+        return this.x == other.getX() && this.y == other.getY();
+
     }
 
     /**
@@ -70,51 +70,28 @@ public class Point {
     }
 
     /**
-     * Setter for x.
-     *
-     * @param newX new x to set
-     */
-    public void setX(double newX) {
-        this.x = newX;
-    }
-
-    /**
-     * Setter for y.
-     *
-     * @param newY new y to set
-     */
-    public void setY(double newY) {
-        this.y = newY;
-    }
-
-    /**
      * check if this point is between the limit points of the line.
      *
      * @param line to check
      * @return true if the point is in the line, false otherwise
      */
     public boolean isInLimits(Line line) {
-        double epsilon = 0.001;
-        if (this.x > Math.max(line.start().getX(), line.end().getX()) + epsilon
-                || this.x < Math.min(line.start().getX(), line.end().getX()) - epsilon) {
+
+        if (this.x > Math.max(line.start().getX(), line.end().getX())
+                || this.x < Math.min(line.start().getX(), line.end().getX())) {
             return false;
         }
 
-        if (this.y > Math.max(line.start().getY(), line.end().getY()) + epsilon
-                || this.y < Math.min(line.start().getY(), line.end().getY()) - epsilon) {
+        if (this.y > Math.max(line.start().getY(), line.end().getY())
+                || this.y < Math.min(line.start().getY(), line.end().getY())) {
             return false;
         }
 
         return true;
 
     }
-
-    /**
-     * Give a representation of the point as a string.
-     *
-     * @return the string value of the point
-     */
+    
     public String toString() {
-        return "(" + this.x + "," + this.y + ")";
+    	return "(" + this.x + "," + this.y + ")";
     }
 }

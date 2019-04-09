@@ -6,12 +6,11 @@ import java.awt.Color;
 /**
  * Ball class will design the ball object.
  *
- * @version 1.1
+ * @version 1.0
  *
  * @author Jessica Arrouasse 328786348
- * username: anidjaj
  */
-public class Ball implements Sprite {
+public class Ball {
     private Point center;
     private int radius;
     private Color color;
@@ -60,6 +59,7 @@ public class Ball implements Sprite {
      */
     public int getY() {
         return (int) this.center.getY();
+
     }
 
     /**
@@ -85,10 +85,10 @@ public class Ball implements Sprite {
      *
      * @param surface the draw's surface
      */
-    @Override
     public void drawOn(DrawSurface surface) {
         surface.setColor(this.getColor());
         surface.fillCircle(this.getX(), this.getY(), this.radius);
+
     }
 
     /**
@@ -99,12 +99,13 @@ public class Ball implements Sprite {
     }
 
     /**
-     * @param ge the gameEnvironment of the ball
+     * @param gameEnvironment the gameEnvironment of the ball
      */
-    public void setGameEnvironment(GameEnvironment ge) {
-        this.gameEnvironment = ge;
+    public void setgameEnvironment(GameEnvironment gameEnvironment) {
+        this.gameEnvironment = gameEnvironment;
     }
 
+    
     /**
      * @param dx delta x
      * @param dy delta y
@@ -123,40 +124,19 @@ public class Ball implements Sprite {
     }
 
     /**
-     * Move the center of the ball to his next position.
-     */
+    * Move the center of the ball to his next position.
+    */
     public void moveOneStep() {
-
         Point end = this.getVelocity().applyToPoint(this.center);
         Line trajectory = new Line(this.center, end);
-
-        // get the closest collision with a collidable on the trajectory.
+        
         CollisionInfo collisionInfo = this.gameEnvironment.getClosestCollision(trajectory);
-
-
+        
         if (collisionInfo != null) {
-            // on collision, set the ball in the collision point and change his velocity
-            this.center = collisionInfo.collisionPoint();
-            this.setVelocity(collisionInfo.collisionObject().hit(collisionInfo.collisionPoint(), this.getVelocity()));
-        } else {
-            this.center = end;
+        	this.setVelocity(collisionInfo.collisionObject().hit(collisionInfo.collisionPoint(), this.getVelocity()));
         }
-    }
-
-    /**
-     * Is used every time the defined time passed.
-     */
-    @Override
-    public void timePassed() {
-        this.moveOneStep();
-    }
-
-    /**
-     * Add this ball to the game.
-     *
-     * @param game the game we add the ball to
-     */
-    public void addToGame(Game game) {
-        game.addSprite(this);
+        
+        // update the center point
+        this.center = this.getVelocity().applyToPoint(this.center);
     }
 }

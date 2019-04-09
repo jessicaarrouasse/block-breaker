@@ -1,27 +1,19 @@
+/**
+ * 
+ */
 package ass3;
 
 /**
- * Collidable interface.
+ * @author jessica
  *
- * @version 1.0
- *
- * @author Jessica Arrouasse 328786348
- * username: anidjaj
  */
 public interface Collidable {
-    /**
-     * Accessor to the position of the collision area.
-     * @return the position of the collidable object
-     */
-    Rectangle getCollisionRectangle();
+	// Return the "collision shape" of the object. 
+	   Rectangle getCollisionRectangle();
 
-    /**
-     * Is called when an object enter in collision with the collidable.
-     *
-     * @param collisionPoint the point of collision on the collidable
-     * @param currentVelocity the velocity of the object who enters in collision with the collidable
-     *
-     * @return the new velocity of the object who enters in collision after the collision
-     */
-    Velocity hit(Point collisionPoint, Velocity currentVelocity);
+	   // Notify the object that we collided with it at collisionPoint with
+	   // a given velocity.
+	   // The return is the new velocity expected after the hit (based on
+	   // the force the object inflicted on us). 
+	   Velocity hit(Point collisionPoint, Velocity currentVelocity);
 }

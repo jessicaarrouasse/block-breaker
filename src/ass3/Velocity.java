@@ -1,19 +1,12 @@
 package ass3;
 
-/**
- * Velocity class represents the angle and the speed as a delta x and y.
- *
- * @version 1.0
- *
- * @author Jessica Arrouasse 328786348
- * username: anidjaj
- */
+
 public class Velocity {
     private double dx;
     private double dy;
 
     /**
-     * Velocity onstructor.
+     * Constructor.
      *
      * @param dx delta x of this velocity
      * @param dy delta y of this velocity
@@ -24,15 +17,15 @@ public class Velocity {
     }
 
     /**
-     * Create a velocity using the angle and speed.
+     * create a velocity using the angle and speed.
      *
      * @param angle of the velocity
      * @param speed of the velocity
      * @return the new instance
      */
     public static Velocity fromAngleAndSpeed(double angle, double speed) {
-        double dx = Math.cos(Math.toRadians(angle)) * speed;
-        double dy = Math.sin(Math.toRadians(angle)) * speed;
+        double dx = Math.cos(angle * Math.PI) * speed;
+        double dy = Math.sin(angle * Math.PI) * speed;
         return new Velocity(dx, dy);
     }
 
