@@ -1,11 +1,12 @@
 package ass3;
 
 /**
- * Point class.
+ * Point class contains x and y.
  *
- * @version 1.0
+ * @version 1.1
  *
  * @author Jessica Arrouasse 328786348
+ * username: anidjaj
  */
 
 public class Point {
@@ -68,12 +69,22 @@ public class Point {
         return this.y;
     }
 
-    public void setX(double x) {
-    	this.x = x;
+    /**
+     * Setter for x.
+     *
+     * @param newX new x to set
+     */
+    public void setX(double newX) {
+        this.x = newX;
     }
 
-    public void setY(double y) {
-    	this.y = y;
+    /**
+     * Setter for y.
+     *
+     * @param newY new y to set
+     */
+    public void setY(double newY) {
+        this.y = newY;
     }
 
     /**
@@ -97,8 +108,13 @@ public class Point {
         return true;
 
     }
-    
+
+    /**
+     * Give a representation of the point as a string.
+     *
+     * @return the string value of the point
+     */
     public String toString() {
-    	return "(" + this.x + "," + this.y + ")";
+        return "(" + this.x + "," + this.y + ")";
     }
 }

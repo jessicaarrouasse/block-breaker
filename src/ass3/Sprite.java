@@ -1,17 +1,25 @@
-/**
- * 
- */
 package ass3;
 
 import biuoop.DrawSurface;
 
 /**
- * @author jessica
+ * Sprite interface.
  *
+ * @version 1.0
+ *
+ * @author Jessica Arrouasse 328786348
+ * username: anidjaj
  */
 public interface Sprite {
-	// draw the sprite to the screen
-	void drawOn(DrawSurface d);
-	// notify the sprite that time has passed
-	void timePassed();
+    /**
+     * Draw the sprite on the screen.
+     *
+     * @param d the surface to draw on
+     */
+    void drawOn(DrawSurface d);
+
+    /**
+     * Notify the sprite that time has passed.
+     */
+    void timePassed();
 }

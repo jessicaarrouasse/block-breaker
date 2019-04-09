@@ -3,11 +3,12 @@ package ass3;
 import java.util.List;
 
 /**
- * Line class.
+ * Line class contains a start point, end point and middle point.
  *
- * @version 1.0
+ * @version 1.1
  *
  * @author Jessica Arrouasse 328786348
+ * username: anidjaj
  */
 
 public class Line {
@@ -120,7 +121,7 @@ public class Line {
     }
 
     /**
-     * found the intersection point.
+     * Find the intersection point.
      *
      * @param other the line to check
      * @return the intersection point if the lines intersect and null otherwise.
@@ -128,9 +129,7 @@ public class Line {
     public Point intersectionWith(Line other) {
         double a1 = this.getSlope();
         double a2 = other.getSlope();
-        if (this.start().getY() <= 100 && this.start().getY() >= 60 && this.start().getX() >= 1104 && other.start().getX() == 1180 && this.end().getX()>=1180) {
-            System.out.println("vcxd");
-        }
+
         // for parallel and nested lines
         if (a1 == a2) {
             //if one of the lines is actually a point
@@ -140,7 +139,6 @@ public class Line {
             if (other.start().equals(other.end()) && other.start().isInLimits(this)) {
                 return other.start();
             }
-
             return null;
         }
 
@@ -174,7 +172,7 @@ public class Line {
     }
 
     /**
-     * check if this line and other are the same.
+     * Check if this line and other are the same.
      *
      * @param other the line to check
      * @return true is the lines are equal, false otherwise
@@ -183,32 +181,36 @@ public class Line {
         return (this.start.equals(other.start) && this.end.equals(other.end))
                 || (this.start.equals(other.end) && this.end.equals(other.start));
     }
-    
+
     // If this line does not intersect with the rectangle, return null.
     // Otherwise, return the closest intersection point to the
     // start of the line.
+    /**
+     * Find the closest intersection from the start of the line with the rectangle.
+     *
+     * @param rect the rectangle to check
+     * @return the closest intersection point or null
+     */
     public Point closestIntersectionToStartOfLine(Rectangle rect) {
-		List<Point> intersections = rect.intersectionPoints(this);
-        if (this.start().getY() >= 645 && this.start().getX() >= 1104 && rect.getWidth() == 1200) {
-            System.out.println("vcxd");
+        // list of intersection points with the rectangle
+        List<Point> intersections = rect.intersectionPoints(this);
+        double minDist = this.length();
+        Point minP = null;
+
+        // if no intersection
+        if (intersections.isEmpty()) {
+            return null;
+        } else {
+            for (Point intersec : intersections) {
+                // find the closest intersection
+                if (this.start.distance(intersec) <= minDist) {
+                    minP = intersec;
+                    minDist = this.start.distance(intersec);
+                }
+            }
         }
-		double minDist = this.length();
-		Point minP = null;
-		if(intersections.isEmpty()) {
-			return null;
-		}
-		else {
-			for (Point intersec : intersections) {
-				if (this.start.distance(intersec) <= minDist) {
-					minP = intersec;
-					minDist = this.start.distance(intersec);
-				}
-			}
-		}
-		if (minP != null && !minP.equals(this.start())) {
-		    return minP;
-        }
-		return null;
+
+        return minP;
     }
 
 }
