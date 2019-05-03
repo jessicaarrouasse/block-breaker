@@ -6,10 +6,8 @@ import java.util.List;
 /**
  * GameEnvironment class will contains the collidables list.
  *
+ * @author Jessica Arrouasse 328786348 username: anidjaj
  * @version 1.0
- *
- * @author Jessica Arrouasse 328786348
- * username: anidjaj
  */
 public class GameEnvironment {
 
@@ -22,6 +20,16 @@ public class GameEnvironment {
      */
     public void addCollidable(Collidable c) {
         collidables.add(c);
+    }
+
+    /**
+     * Remove collidable.
+     *
+     * @param c the collidable to remove
+     */
+    public void removeCollidable(Collidable c) {
+        this.collidables.remove(c);
+
     }
 
     /**

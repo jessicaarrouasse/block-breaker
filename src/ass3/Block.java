@@ -2,42 +2,46 @@ package ass3;
 
 import java.awt.Color;
 import biuoop.DrawSurface;
+import java.util.List;
+import java.util.ArrayList;
+
 
 /**
  * Block class will design the block object with his position, color and hit points number.
  *
+ * @author Jessica Arrouasse 328786348 username: anidjaj
  * @version 1.0
- *
- * @author Jessica Arrouasse 328786348
- * username: anidjaj
  */
-public class Block implements Collidable, Sprite {
+public class Block implements Collidable, Sprite, HitNotifier {
     private Rectangle position;
     private int hitPoints;
     private Color color;
+    private List<HitListener> hitListeners;
+
 
     /**
      * Block constructor, set the block fields.
      *
      * @param upperLeft upperLeft point of the block
-     * @param width width of the block
-     * @param height height of the block
-     * @param color color of the block
-     * @param hits initial hit points number
+     * @param width     width of the block
+     * @param height    height of the block
+     * @param color     color of the block
+     * @param hits      initial hit points number
      */
     public Block(Point upperLeft, double width, double height, Color color, int hits) {
         this.position = new Rectangle(upperLeft, width, height);
         this.color = color;
         this.hitPoints = hits;
+        this.hitListeners = new ArrayList<>();
     }
 
     /**
      * Second constructor with a default initial hit points number.
      *
      * @param upperLeft upperLeft point of the block
-     * @param width width of the block
-     * @param height height of the block
-     * @param color color of the block
+     * @param width     width of the block
+     * @param height    height of the block
+     * @param color     color of the block
      */
     public Block(Point upperLeft, double width, double height, Color color) {
         this(upperLeft, width, height, color, 1);
@@ -45,8 +49,6 @@ public class Block implements Collidable, Sprite {
 
     /**
      * Accessor to the block's position.
-     *
-     * @return the position of the block
      */
     @Override
     public Rectangle getCollisionRectangle() {
@@ -55,23 +57,21 @@ public class Block implements Collidable, Sprite {
 
     /**
      * Is called when an object enter in collision with the block.
-     *
-     * @param collisionPoint the point of collision on the block
-     * @param currentVelocity the velocity of the object who enters in collision with the block
-     *
-     * @return the new velocity of the object who enters in collision after the collision
      */
     @Override
-    public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
+    public Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity) {
         double dx = currentVelocity.getDx();
         double dy = currentVelocity.getDy();
         Point upperLeft = this.position.getUpperLeft();
         double width = this.position.getWidth();
         double height = this.position.getHeight();
 
+
         // decrement hitPoints if positive
-        if (hitPoints > 0) {
+        if (hitPoints > 1) {
             this.hitPoints--;
+        } else {
+            this.notifyHit(hitter);
         }
 
         // corners check
@@ -87,12 +87,11 @@ public class Block implements Collidable, Sprite {
         } else {
             return new Velocity(-dx, dy);
         }
+
     }
 
     /**
      * Draw the block on the given surface.
-     *
-     * @param surface the draw's surface
      */
     @Override
     public void drawOn(DrawSurface surface) {
@@ -130,10 +129,7 @@ public class Block implements Collidable, Sprite {
      * @return the hit points value or 'X' if 0
      */
     public String hitPointsToString() {
-        if (this.hitPoints > 0) {
-            return Integer.toString(this.hitPoints);
-        }
-        return "X";
+        return Integer.toString(this.hitPoints);
     }
 
     /**
@@ -144,6 +140,42 @@ public class Block implements Collidable, Sprite {
      */
     public boolean equals(Block other) {
         return this.position.equals(other.position);
+    }
+
+    /**
+     * Remove from game.
+     *
+     * @param game the game from we want to remove the block
+     */
+    public void removeFromGame(Game game) {
+        game.removeCollidable(this);
+        game.removeSprite(this);
+        this.removeHitListener(game.getBlockRemover());
+    }
+
+    /**
+     * Add hit listener to hit events.
+     */
+    @Override
+    public void addHitListener(HitListener hl){
+        hitListeners.add(hl);
+    }
+
+    /**
+     * Remove hit listener from the list of listeners to hit events.
+     */
+    @Override
+    public void removeHitListener(HitListener hl){
+        hitListeners.remove(hl);
+    }
+
+    private void notifyHit(Ball hitter) {
+        // Make a copy of the hitListeners before iterating over them.
+        List<HitListener> listeners = new ArrayList<>(this.hitListeners);
+        // Notify all listeners about a hit event:
+        for (HitListener hl : listeners) {
+            hl.hitEvent(this, hitter);
+        }
     }
 
 }

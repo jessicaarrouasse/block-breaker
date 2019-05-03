@@ -137,7 +137,8 @@ public class Ball implements Sprite {
         if (collisionInfo != null) {
             // on collision, set the ball in the collision point and change his velocity
             this.center = collisionInfo.collisionPoint();
-            this.setVelocity(collisionInfo.collisionObject().hit(collisionInfo.collisionPoint(), this.getVelocity()));
+            //to do ball hitter
+            this.setVelocity(collisionInfo.collisionObject().hit(this, collisionInfo.collisionPoint(), this.getVelocity()));
         } else {
             this.center = end;
         }
@@ -159,4 +160,15 @@ public class Ball implements Sprite {
     public void addToGame(Game game) {
         game.addSprite(this);
     }
+
+    /**
+     * Remove from game.
+     *
+     * @param game the game from we want to remove the ball
+     */
+    public void removeFromGame(Game game) {
+        game.removeSprite(this);
+    }
+
+
 }

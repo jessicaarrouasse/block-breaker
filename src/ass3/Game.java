@@ -9,20 +9,18 @@ import biuoop.Sleeper;
 /**
  * Game class will contains game constants and all the sprites and collidables.
  *
+ * @author Jessica Arrouasse 328786348 username: anidjaj
  * @version 1.0
- *
- * @author Jessica Arrouasse 328786348
- * username: anidjaj
  */
 public class Game {
-    private static final int COL = 1200;
-    private static final int ROW = 675;
+    private static final int COL = 800;
+    private static final int ROW = 600;
     private static final int BLOCKS = 11;
     private static final int LEVELS = 6;
     private static final int MARGIN = 20;
     private static final int BALL_RADIUS = 5;
     private static final int BALL_SPEED = 15;
-    private static final int BLOCK_WIDTH = 75;
+    private static final int BLOCK_WIDTH = 50;
     private static final int BLOCK_HEIGHT = 20;
     private static final int FIRST_LINE_HEIGHT = 150;
 
@@ -30,10 +28,14 @@ public class Game {
     private GameEnvironment environment;
     private GUI gui;
     private Sleeper sleeper;
+    private BlockRemover blockRemover;
+    private BallRemover ballRemover;
+    private Counter counterBlock;
+    private Counter counterBall;
 
     /**
      * Game constructor.
-     *
+     * <p>
      * Initialize the GUI, the sprites and environement objects
      */
     public Game() {
@@ -43,6 +45,9 @@ public class Game {
         this.sleeper = new Sleeper();
     }
 
+    public Counter getCounter() {
+        return this.counterBlock;
+    }
     /**
      * Add the collidable to the collidables list.
      *
@@ -63,6 +68,7 @@ public class Game {
 
     // Initialize a new game: create the Blocks and Ball (and Paddle)
     // and add them to the game.
+
     /**
      * Initialize a new game by create the blocks, balls and paddle.
      */
@@ -76,17 +82,26 @@ public class Game {
                 Color.GREEN
         };
 
+        this.counterBlock = new Counter();
+        this.counterBall = new Counter();
+        this.blockRemover = new BlockRemover(this, counterBlock);
+        this.ballRemover = new BallRemover(this, counterBall);
+
         // Create the velocities of the balls
         Velocity[] velocities = {
                 Velocity.fromAngleAndSpeed(315, BALL_SPEED),
                 Velocity.fromAngleAndSpeed(225, BALL_SPEED),
+                Velocity.fromAngleAndSpeed(333, BALL_SPEED),
         };
 
         // Create and add the limits to the game
         new Block(new Point(0, 0), COL, MARGIN, Color.GRAY, 0).addToGame(this);
         new Block(new Point(0, 0), MARGIN, ROW, Color.GRAY, 0).addToGame(this);
         new Block(new Point(COL - MARGIN, 0), MARGIN, ROW, Color.GRAY, 0).addToGame(this);
-        new Block(new Point(0, ROW - MARGIN), COL, MARGIN, Color.GRAY, 0).addToGame(this);
+        //death region
+        Block deadRegion = new Block(new Point(0, ROW ), COL, 1, Color.GRAY, 0);
+        deadRegion.addToGame(this);
+        deadRegion.addHitListener(this.ballRemover);
 
         // Create and add the balls to the game
         for (Velocity v : velocities) {
@@ -94,6 +109,7 @@ public class Game {
             ball.setVelocity(v);
             ball.setGameEnvironment(this.environment);
             ball.addToGame(this);
+            counterBall.increase(1);
         }
 
         // Create and add the paddle to the game
@@ -109,6 +125,8 @@ public class Game {
                             colors[0],
                             2);
             block.addToGame(this);
+            block.addHitListener(this.getBlockRemover());
+            this.counterBlock.increase(1);
         }
 
         // Create and add the next lines of blocks
@@ -122,6 +140,8 @@ public class Game {
                               colors[BLOCKS - j]
                             );
                 block.addToGame(this);
+                block.addHitListener(this.getBlockRemover());
+                this.counterBlock.increase(1);
             }
         }
     }
@@ -132,7 +152,7 @@ public class Game {
     public void run() {
         int framesPerSecond = 10;
         int millisecondsPerFrame = 1000 / framesPerSecond;
-        while (true) {
+        while (counterBlock.getValue() > 0 && counterBall.getValue() > 0) {
             // timing
             long startTime = System.currentTimeMillis();
 
@@ -158,5 +178,29 @@ public class Game {
                sleeper.sleepFor(milliSecondLeftToSleep);
             }
         }
+
+        gui.close();
+    }
+
+    /**
+     * remove the collidable
+     *
+     * @param c the collidable to remove
+     */
+    public void removeCollidable(Collidable c){
+        environment.removeCollidable(c);
+    }
+
+    /**
+     * Remove sprite.
+     *
+     * @param s the sprite to remove
+     */
+    public void removeSprite(Sprite s){
+        sprites.removeSprite(s);
+    }
+
+    public BlockRemover getBlockRemover(){
+        return this.blockRemover;
     }
 }

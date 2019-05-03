@@ -74,7 +74,7 @@ public class Paddle implements Sprite, Collidable {
      * @return the new velocity of the object who enters in collision after the collision
      */
     @Override
-    public Velocity hit(Point collisionPoint, Velocity currentVelocity) {
+    public Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity) {
         double dx = currentVelocity.getDx();
         double dy = currentVelocity.getDy();
         double xUpper = this.position.getUpperLeft().getX();
