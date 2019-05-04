@@ -29,7 +29,9 @@ public class BlockRemover implements HitListener {
      * @param hitter the hitter ball
      */
     public void hitEvent(Block beingHit, Ball hitter) {
-        beingHit.removeFromGame(game);
-        remainingBlocks.decrease(1);
+        if (beingHit.getHitPoint() <= 1) {
+            beingHit.removeFromGame(game);
+            remainingBlocks.decrease(1);
+        }
     }
 }

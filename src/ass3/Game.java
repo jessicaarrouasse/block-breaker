@@ -32,6 +32,11 @@ public class Game {
     private BallRemover ballRemover;
     private Counter counterBlock;
     private Counter counterBall;
+    private ScoreTrackingListener currentScore;
+    private Counter counterScore;
+    private Counter counterLives;
+    private ScoreIndicator scoreIndicator;
+    private LivesIndicator livesIndicator;
 
     /**
      * Game constructor.
@@ -43,6 +48,18 @@ public class Game {
         this.environment = new GameEnvironment();
         this.gui = new GUI("Bouncing Ball Example", COL, ROW);
         this.sleeper = new Sleeper();
+    }
+
+    public int getGuiWidth() {
+        return this.COL;
+    }
+
+    public Counter getCounterScore() {
+        return counterScore;
+    }
+
+    public Counter getCounterLives() {
+        return counterLives;
     }
 
     public Counter getCounter() {
@@ -84,37 +101,31 @@ public class Game {
 
         this.counterBlock = new Counter();
         this.counterBall = new Counter();
+        this.counterScore = new Counter();
+        this.counterLives = new Counter();
+        this.currentScore = new ScoreTrackingListener(counterScore);
         this.blockRemover = new BlockRemover(this, counterBlock);
         this.ballRemover = new BallRemover(this, counterBall);
+        this.scoreIndicator = new ScoreIndicator(this);
+        this.livesIndicator = new LivesIndicator(this);
 
-        // Create the velocities of the balls
-        Velocity[] velocities = {
-                Velocity.fromAngleAndSpeed(315, BALL_SPEED),
-                Velocity.fromAngleAndSpeed(225, BALL_SPEED),
-                Velocity.fromAngleAndSpeed(333, BALL_SPEED),
-        };
+        // add scoreIndicator to sprites
+        this.addSprite(this.scoreIndicator);
+
+        // add livesIndicator to sprites
+        this.addSprite(this.livesIndicator);
+
+        //add 4 lives
+        this.counterLives.increase(4);
 
         // Create and add the limits to the game
-        new Block(new Point(0, 0), COL, MARGIN, Color.GRAY, 0).addToGame(this);
+        new Block(new Point(0, 40), COL, MARGIN, Color.GRAY, 0).addToGame(this);
         new Block(new Point(0, 0), MARGIN, ROW, Color.GRAY, 0).addToGame(this);
         new Block(new Point(COL - MARGIN, 0), MARGIN, ROW, Color.GRAY, 0).addToGame(this);
         //death region
         Block deadRegion = new Block(new Point(0, ROW ), COL, 1, Color.GRAY, 0);
         deadRegion.addToGame(this);
         deadRegion.addHitListener(this.ballRemover);
-
-        // Create and add the balls to the game
-        for (Velocity v : velocities) {
-            Ball ball = new Ball(COL / 2, ROW - 50, BALL_RADIUS, Color.WHITE);
-            ball.setVelocity(v);
-            ball.setGameEnvironment(this.environment);
-            ball.addToGame(this);
-            counterBall.increase(1);
-        }
-
-        // Create and add the paddle to the game
-        Paddle paddle = new Paddle(this.gui.getKeyboardSensor(), COL, ROW, BALL_SPEED);
-        paddle.addToGame(this);
 
         // Create and add the first line of blocks
         for (int i = 1; i <= BLOCKS; i++) {
@@ -126,6 +137,7 @@ public class Game {
                             2);
             block.addToGame(this);
             block.addHitListener(this.getBlockRemover());
+            block.addHitListener(this.currentScore);
             this.counterBlock.increase(1);
         }
 
@@ -141,15 +153,33 @@ public class Game {
                             );
                 block.addToGame(this);
                 block.addHitListener(this.getBlockRemover());
+                block.addHitListener(this.currentScore);
                 this.counterBlock.increase(1);
             }
         }
     }
 
-    /**
-     * Run the game.
-     */
-    public void run() {
+    public boolean playOneTurn() {
+
+        // Create the velocities of the balls
+        Velocity[] velocities = {
+                Velocity.fromAngleAndSpeed(315, BALL_SPEED),
+                Velocity.fromAngleAndSpeed(225, BALL_SPEED),
+        };
+
+        // Create and add the balls to the game
+        for (Velocity v : velocities) {
+            Ball ball = new Ball(COL / 2, ROW - 50, BALL_RADIUS, Color.WHITE);
+            ball.setVelocity(v);
+            ball.setGameEnvironment(this.environment);
+            ball.addToGame(this);
+            counterBall.increase(1);
+        }
+
+        // Create and add the paddle to the game
+        Paddle paddle = new Paddle(this.gui.getKeyboardSensor(), COL, ROW, BALL_SPEED);
+        paddle.addToGame(this);
+
         int framesPerSecond = 10;
         int millisecondsPerFrame = 1000 / framesPerSecond;
         while (counterBlock.getValue() > 0 && counterBall.getValue() > 0) {
@@ -175,8 +205,34 @@ public class Game {
             long usedTime = System.currentTimeMillis() - startTime;
             long milliSecondLeftToSleep = millisecondsPerFrame - usedTime;
             if (milliSecondLeftToSleep > 0) {
-               sleeper.sleepFor(milliSecondLeftToSleep);
+                sleeper.sleepFor(milliSecondLeftToSleep);
             }
+        }
+
+        paddle.removeFromGame(this);
+        if (counterBall.getValue() == 0) {
+            this.counterLives.decrease(1);
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+    /**
+     * Run the game.
+     */
+    public void run() {
+
+        while (this.counterLives.getValue() > 0) {
+            if (playOneTurn() == true){
+                break;
+            }
+        }
+
+        if (counterBlock.getValue() == 0) {
+           this.counterScore.increase(100);
         }
 
         gui.close();

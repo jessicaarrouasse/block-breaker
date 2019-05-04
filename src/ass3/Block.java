@@ -66,13 +66,14 @@ public class Block implements Collidable, Sprite, HitNotifier {
         double width = this.position.getWidth();
         double height = this.position.getHeight();
 
+        this.notifyHit(hitter);
 
         // decrement hitPoints if positive
         if (hitPoints > 1) {
             this.hitPoints--;
-        } else {
-            this.notifyHit(hitter);
         }
+
+
 
         // corners check
         if (collisionPoint.equals(upperLeft) || collisionPoint.equals(new Point(upperLeft.getX() + width, upperLeft.getY()))) {
@@ -102,9 +103,6 @@ public class Block implements Collidable, Sprite, HitNotifier {
         // draw the block
         surface.setColor(this.color);
         surface.fillRectangle(x, y, w, h);
-        // draw the hitPoints number
-        surface.setColor(Color.WHITE);
-        surface.drawText(x + (w / 2), y + (h / 2), this.hitPointsToString(), 16);
         // draw the border
         surface.setColor(Color.BLACK);
         surface.drawRectangle(x, y, w, h);
@@ -130,6 +128,15 @@ public class Block implements Collidable, Sprite, HitNotifier {
      */
     public String hitPointsToString() {
         return Integer.toString(this.hitPoints);
+    }
+
+    /**
+     * Get hit points.
+     *
+     * @return the hitpoints
+     */
+    public int getHitPoint(){
+        return hitPoints;
     }
 
     /**
