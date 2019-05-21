@@ -85,6 +85,8 @@ public class Ball implements Sprite {
      */
     @Override
     public void drawOn(DrawSurface surface) {
+        surface.setColor(Color.BLACK);
+        surface.drawCircle(this.getX(), this.getY(), this.radius);
         surface.setColor(this.getColor());
         surface.fillCircle(this.getX(), this.getY(), this.radius);
     }
@@ -151,21 +153,21 @@ public class Ball implements Sprite {
     }
 
     /**
-     * Add this ball to the game.
+     * Add this ball to the gameLevel.
      *
-     * @param game the game we add the ball to
+     * @param gameLevel the gameLevel we add the ball to
      */
-    public void addToGame(Game game) {
-        game.addSprite(this);
+    public void addToGame(GameLevel gameLevel) {
+        gameLevel.addSprite(this);
     }
 
     /**
-     * Remove from game.
+     * Remove from gameLevel.
      *
-     * @param game the game from we want to remove the ball
+     * @param gameLevel the gameLevel from we want to remove the ball
      */
-    public void removeFromGame(Game game) {
-        game.removeSprite(this);
+    public void removeFromGame(GameLevel gameLevel) {
+        gameLevel.removeSprite(this);
     }
 
 

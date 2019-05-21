@@ -16,6 +16,7 @@ public class Paddle implements Sprite, Collidable {
      private Rectangle position;
      private Point bottomRight;
      private double ballSpeed;
+     private double paddleSpeed;
      private double[] zones = {20, 40, 60, 80};
 
     /**
@@ -26,11 +27,12 @@ public class Paddle implements Sprite, Collidable {
      * @param rows height of the screen
      * @param ballSpeed the speed of the ball
      */
-    public Paddle(KeyboardSensor keyboard, double cols, double rows, double ballSpeed) {
+    public Paddle(KeyboardSensor keyboard, double cols, double rows, double ballSpeed, int paddleSpeed, int paddleWidth) {
         this.keyboard = keyboard;
-        this.position = new Rectangle(new Point((cols / 2) - 40, rows - 40), 100, 1);
+        this.position = new Rectangle(new Point((cols / 2) - (paddleWidth / 2), rows - 40), paddleWidth, 1);
         this.bottomRight = new Point(cols, rows);
         this.ballSpeed = ballSpeed;
+        this.paddleSpeed = paddleSpeed;
     }
 
     /**
@@ -38,8 +40,8 @@ public class Paddle implements Sprite, Collidable {
      */
     public void moveLeft() {
         Point upperLeft = this.position.getUpperLeft();
-        if (upperLeft.getX() > 20) {
-            this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() - 20);
+        if (upperLeft.getX() > paddleSpeed) {
+            this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() - paddleSpeed);
         }
     }
 
@@ -48,8 +50,8 @@ public class Paddle implements Sprite, Collidable {
      */
     public void moveRight() {
         Point upperLeft = this.position.getUpperLeft();
-        if (upperLeft.getX() + 100 < bottomRight.getX() - 20) {
-            this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() + 20);
+        if (upperLeft.getX() + this.position.getWidth() < bottomRight.getX() - paddleSpeed) {
+            this.position.getUpperLeft().setX(this.position.getUpperLeft().getX() + paddleSpeed);
         }
     }
 
@@ -115,22 +117,22 @@ public class Paddle implements Sprite, Collidable {
 
 
     /**
-     * Add the paddle to the game.
+     * Add the paddle to the gameLevel.
      *
-     * @param game the game where we add the ball to
+     * @param gameLevel the gameLevel where we add the ball to
      */
-    public void addToGame(Game game) {
-        game.addSprite(this);
-        game.addCollidable(this);
+    public void addToGame(GameLevel gameLevel) {
+        gameLevel.addSprite(this);
+        gameLevel.addCollidable(this);
     }
 
     /**
-     * remove the paddle from the game.
+     * remove the paddle from the gameLevel.
      *
-     * @param game the game where we remove the ball to
+     * @param gameLevel the gameLevel where we remove the ball to
      */
-    public void removeFromGame(Game game) {
-        game.removeCollidable(this);
-        game.removeSprite(this);
+    public void removeFromGame(GameLevel gameLevel) {
+        gameLevel.removeCollidable(this);
+        gameLevel.removeSprite(this);
     }
 }
