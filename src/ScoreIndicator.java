@@ -17,10 +17,6 @@ public class ScoreIndicator implements Sprite {
         this.position = new Rectangle(new Point(0, 0), gameFlow.getGuiWidth(), 20);
     }
 
-    /**
-     * draw the score on the screen.
-     * @param d the surface to draw on
-     */
     @Override
     public void drawOn(DrawSurface d) {
         String score = "Score: " + this.gameFlow.getCounterScore().getValue();

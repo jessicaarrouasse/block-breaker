@@ -1,8 +1,12 @@
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Direct hit.
+ */
 public class DirectHit implements LevelInformation {
+
     @Override
     public int numberOfBalls() {
         return initialBallVelocities().size();
@@ -10,8 +14,8 @@ public class DirectHit implements LevelInformation {
 
     @Override
     public List<Velocity> initialBallVelocities() {
-        List velocities = new ArrayList<>();
-        velocities.add(new Velocity(0, -2));
+        List<Velocity> velocities = new ArrayList<>();
+        velocities.add(new Velocity(0, -3));
         return velocities;
     }
 
@@ -32,17 +36,17 @@ public class DirectHit implements LevelInformation {
 
     @Override
     public Sprite getBackground() {
-        return new DirectHitBackground(new Point(410, 160));
+        return new DirectHitBackground(new Point(400, 160));
     }
 
     @Override
     public List<Block> blocks() {
-        List blocks = new ArrayList<>();
-        blocks.add(new Block(new Point(400, 150), 20, 20, Color.RED));
+        List<Block> blocks = new ArrayList<>();
+        blocks.add(new Block(new Point(390, 150), 20, 20, Color.RED));
         return blocks;    }
 
     @Override
     public int numberOfBlocksToRemove() {
-        return 1;
+        return blocks().size();
     }
 }

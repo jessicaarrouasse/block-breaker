@@ -3,7 +3,7 @@
  * a BlockRemover is in charge of removing blocks from the gameLevel, as well as keeping count
  * of the number of blocks that remain.
  */
-public class BallRemover implements HitListener {
+public class  BallRemover implements HitListener {
     private GameLevel gameLevel;
     private Counter remainingBalls;
 
@@ -18,13 +18,6 @@ public class BallRemover implements HitListener {
         this.remainingBalls = removedBalls;
     }
 
-    /**
-     * Blocks that are hit and reach 0 hit-points should be removed
-     * from the gameLevel. Remember to remove this listener from the block
-     * that is being removed from the gameLevel.
-     * @param beingHit the being hit object
-     * @param hitter the hitter parameter is the Ball that's doing the hitting.
-     */
     @Override
     public void hitEvent(Block beingHit, Ball hitter) {
         hitter.removeFromGame(gameLevel);

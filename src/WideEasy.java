@@ -1,15 +1,26 @@
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type WideEasy.
+ */
 public class WideEasy implements LevelInformation {
     private Color[] colors = {
             Color.RED,
+            Color.RED,
+            Color.ORANGE,
             Color.ORANGE,
             Color.YELLOW,
+            Color.YELLOW,
+            Color.GREEN,
+            Color.GREEN,
             Color.GREEN,
             Color.BLUE,
+            Color.BLUE,
             Color.PINK,
+            Color.PINK,
+            Color.CYAN,
             Color.CYAN
     };
 
@@ -20,9 +31,9 @@ public class WideEasy implements LevelInformation {
 
     @Override
     public List<Velocity> initialBallVelocities() {
-        List velocities = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            velocities.add(Velocity.fromAngleAndSpeed(-40 - (i * 10), 5));
+        List<Velocity> velocities = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            velocities.add(Velocity.fromAngleAndSpeed(-45 - (i * 10), 6));
         }
         return velocities;
     }
@@ -51,15 +62,15 @@ public class WideEasy implements LevelInformation {
     public List<Block> blocks() {
         int y = 250;
         int width = 50;
-        List blocks = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            blocks.add(new Block(new Point(25 + (i * width), y), width, 20, colors[i % colors.length]));
+        List<Block> blocks = new ArrayList<>();
+        for (int i = 0; i < colors.length; i++) {
+            blocks.add(new Block(new Point(25 + (i * width), y), width, 20, colors[i]));
         }
         return blocks;
     }
 
     @Override
     public int numberOfBlocksToRemove() {
-        return 1;
+        return blocks().size();
     }
 }

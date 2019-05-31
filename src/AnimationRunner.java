@@ -14,7 +14,8 @@ public class AnimationRunner {
     /**
      * Instantiates a new Animation runner.
      *
-     * @param gui the gui
+     * @param gui             the gui
+     * @param framesPerSecond the frames per second
      */
     public AnimationRunner(GUI gui, int framesPerSecond) {
         this.gui = gui;

@@ -20,14 +20,12 @@ public class EndGameScreen implements Animation {
 
     @Override
     public void doOneFrame(DrawSurface d) {
-        String message;
-        if (lose) {
-            message = "Game Over.";
-        } else {
-            message = "You Win!";
-        }
+        String message = lose ? "Game Over." : "You Win!";
         d.drawText(10, d.getHeight() / 2, message + " Your score is " + this.score.getValue(), 32);
     }
+
     @Override
-    public boolean shouldStop() { return false; }
+    public boolean shouldStop() {
+        return false;
+    }
 }

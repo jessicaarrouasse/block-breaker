@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Green3.
+ */
 public class Green3 implements LevelInformation {
 
     private static final int COL = 800;
@@ -20,9 +23,9 @@ public class Green3 implements LevelInformation {
 
     @Override
     public List<Velocity> initialBallVelocities() {
-        List velocities = new ArrayList<>();
-        velocities.add(new Velocity(2, -2));
-        velocities.add(new Velocity(-2, -2));
+        List<Velocity> velocities = new ArrayList<>();
+        velocities.add(new Velocity(3, -3));
+        velocities.add(new Velocity(-3, -3));
         return velocities;
     }
 
@@ -38,7 +41,7 @@ public class Green3 implements LevelInformation {
 
     @Override
     public String levelName() {
-        return "Grenn 3";
+        return "Green 3";
     }
 
     @Override
@@ -58,7 +61,7 @@ public class Green3 implements LevelInformation {
                 Color.GREEN
         };
 
-        List blocks = new ArrayList<>();
+        List<Block> blocks = new ArrayList<>();
 
         for (int j = BLOCKS - 1; j > BLOCKS - LEVELS; j--) {
             for (int i = 1; i <= j; i++) {
@@ -78,6 +81,6 @@ public class Green3 implements LevelInformation {
 
     @Override
     public int numberOfBlocksToRemove() {
-        return 1;
+        return blocks().size();
     }
 }

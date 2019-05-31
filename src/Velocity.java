@@ -55,4 +55,11 @@ public class Velocity {
     public Point applyToPoint(Point p) {
         return new Point(p.getX() + this.dx, p.getY() + this.dy);
     }
+
+    /**
+     * @return the speed
+     */
+    public double getSpeed() {
+        return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+    }
 }

@@ -1,7 +1,10 @@
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Final four.
+ */
 public class FinalFour implements LevelInformation {
     private Color[] colors = {
             Color.RED,
@@ -20,10 +23,11 @@ public class FinalFour implements LevelInformation {
 
     @Override
     public List<Velocity> initialBallVelocities() {
-        List velocities = new ArrayList<>();
-        velocities.add(new Velocity(2, -2));
-        velocities.add(new Velocity(-2, -2));
-        velocities.add(new Velocity(0, -2));
+        int speed = 4;
+        List<Velocity> velocities = new ArrayList<>();
+        velocities.add(new Velocity(speed, -speed));
+        velocities.add(new Velocity(-speed, -speed));
+        velocities.add(new Velocity(0, -speed));
         return velocities;
     }
 
@@ -51,7 +55,7 @@ public class FinalFour implements LevelInformation {
     public List<Block> blocks() {
         int y = 100;
         int width = 50;
-        List blocks = new ArrayList<>();
+        List<Block> blocks = new ArrayList<>();
         for (int j = 0; j < 7; j++) {
             for (int i = 0; i < 15; i++) {
                 blocks.add(new Block(new Point(25 + (i * width), y + (j * 20)), width, 20, colors[j]));
@@ -62,6 +66,6 @@ public class FinalFour implements LevelInformation {
 
     @Override
     public int numberOfBlocksToRemove() {
-        return 1;
+        return blocks().size();
     }
 }

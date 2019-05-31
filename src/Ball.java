@@ -78,11 +78,6 @@ public class Ball implements Sprite {
         return this.color;
     }
 
-    /**
-     * draw the ball on the given DrawSurface with the color of this ball.
-     *
-     * @param surface the draw's surface
-     */
     @Override
     public void drawOn(DrawSurface surface) {
         surface.setColor(Color.BLACK);

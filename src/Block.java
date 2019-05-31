@@ -45,21 +45,11 @@ public class Block implements Collidable, Sprite, HitNotifier {
         this(upperLeft, width, height, color, 1);
     }
 
-    /**
-     * Accessor to the block's position.
-     * @return the position of the collidable object
-     */
     @Override
     public Rectangle getCollisionRectangle() {
         return this.position;
     }
 
-    /**
-     * Is called when an object enter in collision with the block.
-     * @param collisionPoint the point of collision on the collidable
-     * @param currentVelocity the velocity of the object who enters in collision with the collidable
-     * @param hitter the ball that hit
-     * @return the new velocity of the object who enters in collision after the collision     */
     @Override
     public Velocity hit(Ball hitter, Point collisionPoint, Velocity currentVelocity) {
         double dx = currentVelocity.getDx();
@@ -93,10 +83,6 @@ public class Block implements Collidable, Sprite, HitNotifier {
 
     }
 
-    /**
-     * Draw the block on the given surface.
-     * @param surface the surface to draw on
-     */
     @Override
     public void drawOn(DrawSurface surface) {
         int x = (int) this.position.getUpperLeft().getX();
@@ -164,19 +150,11 @@ public class Block implements Collidable, Sprite, HitNotifier {
         this.removeHitListener(gameLevel.getBlockRemover());
     }
 
-    /**
-     * Add hit listener to hit events.
-     * @param hl the listener to add
-     */
     @Override
     public void addHitListener(HitListener hl) {
         hitListeners.add(hl);
     }
 
-    /**
-     * Remove hit listener from the list of listeners to hit events.
-     * @param hl the listener to remove
-     */
     @Override
     public void removeHitListener(HitListener hl) {
         hitListeners.remove(hl);

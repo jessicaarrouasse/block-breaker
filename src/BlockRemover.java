@@ -18,13 +18,6 @@ public class BlockRemover implements HitListener {
         this.remainingBlocks = removedBlocks;
     }
 
-    /**
-     * Blocks that are hit and reach 0 hit-points should be removed
-     * from the gameLevel. Remember to remove this listener from the block
-     * that is being removed from the gameLevel.
-     * @param beingHit the being hit object
-     * @param hitter the hitter parameter is the Ball that's doing the hitting.
-     */
     @Override
     public void hitEvent(Block beingHit, Ball hitter) {
         if (beingHit.getHitPoint() <= 1) {
