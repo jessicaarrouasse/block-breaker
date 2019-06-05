@@ -1,6 +1,8 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import biuoop.DialogManager;
 import biuoop.GUI;
 import biuoop.KeyboardSensor;
 
@@ -23,6 +25,8 @@ public class GameFlow {
     private LivesIndicator livesIndicator;
     private AnimationRunner runner;
     private List<Sprite> topBar;
+    private HighScoresTable highScores;
+    private File fileName;
 
 
     /**
@@ -34,6 +38,9 @@ public class GameFlow {
         this.topBar = new ArrayList<>();
         this.gui = new GUI("Araknoid", COL, ROW);
         this.runner = new AnimationRunner(this.gui, 60);
+        this.fileName = new File("highscores");
+        this.highScores = HighScoresTable.loadFromFile(this.fileName);
+
     }
 
     /**
@@ -111,6 +118,20 @@ public class GameFlow {
 
             this.counterScore.increase(100);
         }
+
+        if (this.highScores.getRank(this.counterScore.getValue()) <= this.highScores.size()) {
+
+            DialogManager dialog = this.gui.getDialogManager();
+            String name = dialog.showQuestionDialog("Name", "What is your name?", "");
+
+            this.highScores.add(new ScoreInfo(name, this.counterScore.getValue()));
+            try {
+                this.highScores.save(this.fileName);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+
         this.runner.run(
                 new KeyPressStoppableAnimation(
                         this.gui.getKeyboardSensor(),
@@ -118,6 +139,16 @@ public class GameFlow {
                         new EndGameScreen(counterScore, lose)
                 )
         );
+
+
+        this.runner.run(
+                new KeyPressStoppableAnimation(
+                        this.gui.getKeyboardSensor(),
+                        KeyboardSensor.SPACE_KEY,
+                        new HighScoresAnimation(this.highScores)
+                )
+        );
+
         gui.close();
     }
 }

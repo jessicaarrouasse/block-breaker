@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class Ass6Game {
      */
     public static void main(String[] args) {
         LevelInformation[] possibleLevels = {
-                new DirectHit(),
+//                new DirectHit(),
                 new WideEasy(),
-                new Green3(),
-                new FinalFour(),
+//                new Green3(),
+//                new FinalFour(),
         };
         List<LevelInformation> levels = new ArrayList<>();
 
