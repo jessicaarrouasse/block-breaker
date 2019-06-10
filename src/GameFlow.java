@@ -148,7 +148,55 @@ public class GameFlow {
                         new HighScoresAnimation(this.highScores)
                 )
         );
+    }
 
-        gui.close();
+    public void runHighScore() {
+        this.runner.run(
+                new KeyPressStoppableAnimation(
+                        this.gui.getKeyboardSensor(),
+                        KeyboardSensor.SPACE_KEY,
+                        new HighScoresAnimation(this.highScores)
+                )
+        );
+    }
+
+    public void runMenu(List<LevelInformation> levels) {
+        Menu<Task<Void>> menu = new MenuAnimation<>(this.gui.getKeyboardSensor());
+
+        Task<Void> play = new Task<Void>() {
+            @Override
+            public Void run() {
+                runLevels(levels);
+                return null;
+            }
+        };
+
+        Task<Void> showHighScore = new Task<Void>() {
+            @Override
+            public Void run() {
+                runHighScore();
+                return null;
+            }
+        };
+
+        Task<Void> quit = new Task<Void>() {
+            @Override
+            public Void run() {
+                System.exit(0);
+                return null;
+            }
+        };
+
+        menu.addSelection("s", "Play", play);
+        menu.addSelection("h", "HighScores", showHighScore);
+        menu.addSelection("q", "Quit", quit);
+
+        while (true) {
+            runner.run(menu);
+            // wait for user selection
+            Task<Void> task = menu.getStatus();
+            task.run();
+        }
+
     }
 }

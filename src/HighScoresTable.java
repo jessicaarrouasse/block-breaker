@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+// todo verifier highscores
+
 /**
  * The type High scores table.
  */
