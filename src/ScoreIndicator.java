@@ -24,7 +24,7 @@ public class ScoreIndicator implements Sprite {
         d.fillRectangle((int) position.getUpperLeft().getX(),
             (int) position.getUpperLeft().getY(), gameFlow.getGuiWidth(), 20);
         d.setColor(Color.BLACK);
-        d.drawText(gameFlow.getGuiWidth() / 2, 15, score, 16);
+        d.drawText(gameFlow.getGuiWidth() / 3, 15, score, 16);
 
     }
 

@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,16 +162,45 @@ public class GameFlow {
         );
     }
 
-    public void runMenu(List<LevelInformation> levels) {
-        Menu<Task<Void>> menu = new MenuAnimation<>(this.gui.getKeyboardSensor());
+    public Task<Void> getPlayTask(String path) {
 
-        Task<Void> play = new Task<Void>() {
+        FileReader reader = null;
+
+        try {
+            reader = new FileReader(path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        List<LevelInformation> levels = new LevelSpecificationReader().fromReader(reader);
+
+        return new Task<Void>() {
             @Override
             public Void run() {
                 runLevels(levels);
                 return null;
             }
         };
+    }
+
+
+    public void runMenu(String levelSets) {
+        Menu<Task<Void>> menu = new MenuAnimation<>(this.gui.getKeyboardSensor(), this.runner);
+        Menu<Task<Void>> levelSetSubMenu = new MenuAnimation<>(this.gui.getKeyboardSensor(), this.runner);
+
+        FileReader reader = null;
+
+        try {
+            reader = new FileReader(levelSets);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        List<LevelSet> sets = LevelSetReader.fromReader(reader);
+
+        for (LevelSet level: sets) {
+            levelSetSubMenu.addSelection(level.getKey(), level.getMessage(), getPlayTask(level.getPath()));
+        }
 
         Task<Void> showHighScore = new Task<Void>() {
             @Override
@@ -187,7 +218,7 @@ public class GameFlow {
             }
         };
 
-        menu.addSelection("s", "Play", play);
+        menu.addSubMenu("s", "Play", levelSetSubMenu);
         menu.addSelection("h", "HighScores", showHighScore);
         menu.addSelection("q", "Quit", quit);
 

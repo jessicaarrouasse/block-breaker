@@ -58,7 +58,7 @@ public class FinalFour implements LevelInformation {
         List<Block> blocks = new ArrayList<>();
         for (int j = 0; j < 7; j++) {
             for (int i = 0; i < 15; i++) {
-                blocks.add(new Block(new Point(25 + (i * width), y + (j * 20)), width, 20, colors[j]));
+                blocks.add(new Block(new Point(25 + (i * width), y + (j * 20)), width, 20, new BlockBackground(colors[j])));
             }
         }
         return blocks;

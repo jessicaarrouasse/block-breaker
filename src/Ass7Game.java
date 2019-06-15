@@ -1,5 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +15,12 @@ public class Ass7Game {
      * @param args program arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        LevelInformation[] possibleLevels = {
+//        LevelInformation[] possibleLevels = {
 //                new DirectHit(),
-                new WideEasy(),
+//                new WideEasy(),
 //                new Green3(),
 //                new FinalFour(),
-        };
+//        };
 //        List<LevelInformation> levels = new ArrayList<>();
 //
 //        for (String str: args) {
@@ -43,9 +42,15 @@ public class Ass7Game {
 //            }
 //        }
 
-        LevelSpecificationReader x = new LevelSpecificationReader();
-        List<LevelInformation> levels = x.fromReader(new FileReader("./levels.txt"));
+        // TODO check why need this 'https://www.baeldung.com/reading-file-in-java'
+//
+//        InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("./../definitions/easy_level_definitions.txt");
+//        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+/////////
+//        List<LevelInformation> levels = x.fromReader(br);
+//        List<LevelInformation> levels = new LevelSpecificationReader().fromReader(new FileReader("./definitions/easy_level_definitions.txt"));
         GameFlow game = new GameFlow();
-        game.runMenu(levels);
+        game.runMenu("level_sets.txt");
     }
 }

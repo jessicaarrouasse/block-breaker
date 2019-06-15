@@ -91,14 +91,14 @@ public class GameLevel implements Animation {
         this.addSprite(new LevelIndicator(this.info.levelName()));
 
         // Create and add the limits to the game
-        new Block(new Point(0, 20), surface.getWidth(), MARGIN, Color.GRAY, 0).addToGame(this);
-        new Block(new Point(0, 20), MARGIN, surface.getHeight(), Color.GRAY, 0).addToGame(this);
+        new Block(new Point(0, 20), surface.getWidth(), MARGIN, new BlockBackground(Color.GRAY), 0).addToGame(this);
+        new Block(new Point(0, 20), MARGIN, surface.getHeight(), new BlockBackground(Color.GRAY), 0).addToGame(this);
         new Block(
-                new Point(surface.getWidth() - MARGIN, 20), MARGIN, surface.getHeight(), Color.GRAY, 0
+                new Point(surface.getWidth() - MARGIN, 20), MARGIN, surface.getHeight(), new BlockBackground(Color.GRAY), 0
         ).addToGame(this);
 
         //death region
-        Block deadRegion = new Block(new Point(0, surface.getHeight()), surface.getWidth(), 1, Color.GRAY, 0);
+        Block deadRegion = new Block(new Point(0, surface.getHeight()), surface.getWidth(), 1, new BlockBackground(Color.GRAY), 0);
         deadRegion.addToGame(this);
         deadRegion.addHitListener(this.ballRemover);
 

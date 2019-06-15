@@ -1,6 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Reader;
@@ -26,18 +24,18 @@ public class LevelSpecificationReader {
 
         BufferedReader bufferedReader = new BufferedReader(reader);
 
-        boolean shouldRegister = false;
+        boolean shouldRecord = false;
         String line;
         List<List<String>> levels = new ArrayList<>();
 
         try {
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.equals("START_LEVEL")) {
-                    shouldRegister = true;
+                    shouldRecord = true;
                     levels.add(new ArrayList<>());
                 } else if (line.equals("END_LEVEL")) {
-                    shouldRegister = false;
-                } else if (shouldRegister) {
+                    shouldRecord = false;
+                } else if (shouldRecord) {
                     levels.get(levels.size() - 1).add(line);
                 }
             }
@@ -53,14 +51,33 @@ public class LevelSpecificationReader {
         List<Velocity> velocities = new ArrayList<>();
         int paddleSpeed = 0;
         int paddleWidth = 0;
+        int blocksStartX = 0;
+        int blocksStartY = 0;
+        int rowHeight = 0;
+        int numBlocks = 0;
         String background = "";
-
+        String blockDefinitionsFilename = "";
+        List<String> lineBlocks = new ArrayList<>();
+        boolean shouldRecordBlocks = false;
 
 
         for (String line: level) {
+            if (shouldRecordBlocks == true) {
+                lineBlocks.add(line);
+                continue;
+            }
+            if (line.equals("START_BLOCKS")) {
+                shouldRecordBlocks = true;
+                continue;
+            }
+            if (line.equals("END_BLOCKS")) {
+                shouldRecordBlocks = false;
+                continue;
+            }
             if (!line.contains(":")) {
                 continue;
             }
+
             String[] output = line.split(":");
             String key = output[0];
             String value = output[1];
@@ -82,12 +99,27 @@ public class LevelSpecificationReader {
                 case "background":
                     background = value;
                     break;
+                case "blocks_start_x":
+                    blocksStartX = Integer.parseInt(value);
+                    break;
+                case "blocks_start_y":
+                    blocksStartY = Integer.parseInt(value);
+                    break;
+                case "row_height":
+                    rowHeight = Integer.parseInt(value);
+                    break;
+                case "block_definitions":
+                    blockDefinitionsFilename = value;
+                    break;
+                case "num_blocks":
+                    numBlocks = Integer.parseInt(value);
+                    break;
                 default:
                     break;
             }
         }
 
-        return new LevelInformationFromFile(velocities, paddleSpeed, paddleWidth, levelName, background);
+        return new LevelInformationFromFile(velocities, paddleSpeed, paddleWidth, levelName, background, blocksStartX, blocksStartY, rowHeight, blockDefinitionsFilename, lineBlocks, numBlocks);
     }
 
     private List<Velocity> getVelocities(String line) {

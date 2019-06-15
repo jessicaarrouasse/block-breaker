@@ -42,7 +42,7 @@ public class DirectHit implements LevelInformation {
     @Override
     public List<Block> blocks() {
         List<Block> blocks = new ArrayList<>();
-        blocks.add(new Block(new Point(390, 150), 20, 20, Color.RED));
+        blocks.add(new Block(new Point(390, 150), 20, 20, new BlockBackground(Color.RED)));
         return blocks;    }
 
     @Override

@@ -1,7 +1,14 @@
-import java.awt.Color;
+import java.awt.*;
+
 import biuoop.DrawSurface;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -13,24 +20,23 @@ import java.util.ArrayList;
 public class Block implements Collidable, Sprite, HitNotifier {
     private Rectangle position;
     private int hitPoints;
-    private Color color;
+    private BlockBackground background;
+    private Color stroke;
     private List<HitListener> hitListeners;
+    Map<Integer, BlockBackground> fillK;
 
 
-    /**
-     * Block constructor, set the block fields.
-     *
-     * @param upperLeft upperLeft point of the block
-     * @param width     width of the block
-     * @param height    height of the block
-     * @param color     color of the block
-     * @param hits      initial hit points number
-     */
-    public Block(Point upperLeft, double width, double height, Color color, int hits) {
+    public Block(Point upperLeft, double width, double height, BlockBackground background, int hits, Map<Integer, BlockBackground> fillK, Color stroke) {
         this.position = new Rectangle(upperLeft, width, height);
-        this.color = color;
+        this.background = background;
         this.hitPoints = hits;
+        this.fillK = fillK;
         this.hitListeners = new ArrayList<>();
+        this.stroke = stroke;
+    }
+
+    public Block(Point upperLeft, double width, double height, BlockBackground background, int hits) {
+        this(upperLeft, width, height, background, hits, new HashMap<>(), null);
     }
 
     /**
@@ -39,10 +45,10 @@ public class Block implements Collidable, Sprite, HitNotifier {
      * @param upperLeft upperLeft point of the block
      * @param width     width of the block
      * @param height    height of the block
-     * @param color     color of the block
+     * @param background     background of the block
      */
-    public Block(Point upperLeft, double width, double height, Color color) {
-        this(upperLeft, width, height, color, 1);
+    public Block(Point upperLeft, double width, double height, BlockBackground background) {
+        this(upperLeft, width, height, background, 1, new HashMap<>(), null);
     }
 
     @Override
@@ -90,11 +96,18 @@ public class Block implements Collidable, Sprite, HitNotifier {
         int w = (int) this.position.getWidth();
         int h = (int) this.position.getHeight();
         // draw the block
-        surface.setColor(this.color);
-        surface.fillRectangle(x, y, w, h);
+        BlockBackground background = fillK.get(this.hitPoints);
+        if (background != null) {
+            background.drawOn(surface, x, y, w, h);
+        } else {
+            this.background.drawOn(surface, x, y, w, h);
+        }
+
         // draw the border
-        surface.setColor(Color.BLACK);
-        surface.drawRectangle(x, y, w, h);
+        if (stroke != null) {
+            surface.setColor(stroke);
+            surface.drawRectangle(x, y, w, h);
+        }
     }
     /**
      * Notify the sprite that time has passed.

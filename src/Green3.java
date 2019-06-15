@@ -70,7 +70,7 @@ public class Green3 implements LevelInformation {
                                 FIRST_LINE_HEIGHT + ((BLOCKS - j) * BLOCK_HEIGHT)),
                         BLOCK_WIDTH,
                         BLOCK_HEIGHT,
-                        colors[BLOCKS - j]
+                        new BlockBackground(colors[BLOCKS - j])
                 ));
             }
         }

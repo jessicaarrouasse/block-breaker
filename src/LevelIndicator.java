@@ -23,7 +23,7 @@ public class LevelIndicator implements Sprite {
         String level = "Level Name: " + this.levelName;
 
         d.setColor(Color.BLACK);
-        d.drawText(600, 15, level, 16);
+        d.drawText(500, 15, level, 16);
     }
 
     @Override
