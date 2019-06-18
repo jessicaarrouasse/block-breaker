@@ -1,9 +1,11 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Level information from file.
+ */
 public class LevelInformationFromFile implements LevelInformation {
 
     private List<Velocity> velocities;
@@ -18,14 +20,31 @@ public class LevelInformationFromFile implements LevelInformation {
     private List<String> lineBlocks;
     private int numBlocks;
 
-    public LevelInformationFromFile(List<Velocity> velocities, int paddleSpeed, int paddleWidth, String levelName, String background, int blocksStartX, int blocksStartY, int rowHeight, String blockDefinitionsFilename, List<String> lineBlocks, int numBlocks) {
+    /**
+     * Instantiates a new Level information from file.
+     *
+     * @param velocities               the velocities
+     * @param details                  the details
+     * @param startPoint               the start point
+     * @param rowHeight                the row height
+     * @param blockDefinitionsFilename the block definitions filename
+     * @param lineBlocks               the line blocks
+     * @param numBlocks                the num blocks
+     */
+    public LevelInformationFromFile(List<Velocity> velocities,
+                                    LevelDetails details,
+                                    Point startPoint,
+                                    int rowHeight,
+                                    String blockDefinitionsFilename,
+                                    List<String> lineBlocks,
+                                    int numBlocks) {
         this.velocities = velocities;
-        this.paddleSpeed = paddleSpeed;
-        this.paddleWidth = paddleWidth;
-        this.levelName = levelName;
-        this.background = background;
-        this.blocksStartX = blocksStartX;
-        this.blocksStartY = blocksStartY;
+        this.paddleSpeed = details.getPaddleSpeed();
+        this.paddleWidth = details.getPaddleWidth();
+        this.levelName = details.getLevelName();
+        this.background = details.getBackground();
+        this.blocksStartX = (int) startPoint.getX();
+        this.blocksStartY = (int) startPoint.getY();
         this.rowHeight = rowHeight;
         this.blockDefinitionsFilename = blockDefinitionsFilename;
         this.lineBlocks = lineBlocks;
@@ -70,18 +89,12 @@ public class LevelInformationFromFile implements LevelInformation {
     @Override
     public List<Block> blocks() {
         List<Block> blocks = new ArrayList<>();
-        Reader file;
         int currentX = this.blocksStartX;
         int currentY = this.blocksStartY;
-        try {
-            file = new FileReader(this.blockDefinitionsFilename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
 
-        BlocksDefinitionReader bdr = new BlocksDefinitionReader();
-        BlocksFromSymbolsFactory factory = bdr.fromReader(file);
+        InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(this.blockDefinitionsFilename);
+
+        BlocksFromSymbolsFactory factory = BlocksDefinitionReader.fromReader(new InputStreamReader(is));
 
         for (String line: this.lineBlocks) {
             String[] symbols = line.split("");

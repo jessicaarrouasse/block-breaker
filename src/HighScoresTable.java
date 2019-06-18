@@ -1,24 +1,25 @@
-import java.io.*;
+import java.io.FileReader;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-// todo verifier highscores
 
 /**
  * The type High scores table.
  */
 class HighScoresTable {
 
+    private static int defaultSize = 5;
     private List<ScoreInfo> scores;
     private int size;
 
     /**
-     * Instantiates a new High scores table.
+     * Create an empty high-scores table with the specified size.
      *
      * @param size the size of the table
      */
-    // Create an empty high-scores table with the specified size.
-    // The size means that the table holds up to size top scores.
     public HighScoresTable(int size) {
         this.scores = new ArrayList<>();
         this.size = size;
@@ -39,6 +40,8 @@ class HighScoresTable {
     }
 
     /**
+     * Size int.
+     *
      * @return the table size
      */
     public int size() {
@@ -50,8 +53,6 @@ class HighScoresTable {
      *
      * @return the current high scores
      */
-    // The list is sorted such that the highest
-    // scores come first.
     public List<ScoreInfo> getHighScores() {
         return this.scores;
     }
@@ -62,20 +63,18 @@ class HighScoresTable {
      * @param score that we want the rank
      * @return the rank of the current score: where will it
      */
-    // be on the list if added?
-    // Rank 1 means the score will be highest on the list.
-    // Rank `size` means the score will be lowest.
-    // Rank > `size` means the score is too low and will not be added to the list.
     public int getRank(int score) {
-        for (int i = 0; i < this.scores.size(); i++){
-            if (this.scores.get(i).getScore() < score){
+        for (int i = 0; i < this.scores.size(); i++) {
+            if (this.scores.get(i).getScore() < score) {
                 return i + 1;
             }
         }
         return this.scores.size() + 1;
     }
 
-   // Clears the table
+    /**
+     * Clear.
+     */
     public void clear() {
         this.scores.clear();
     }
@@ -86,7 +85,6 @@ class HighScoresTable {
      * @param fileName the name of the file
      * @throws IOException if the load failed, we got an IOException
      */
-    // Current table data is cleared.
     public void load(File fileName) throws IOException {
         FileReader fileReader = new FileReader(fileName);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -126,8 +124,6 @@ class HighScoresTable {
      * @param fileName the name of the file
      * @return the high scores table
      */
-    // Read a table from file and return it.
-    // If the file does not exist, or there is a problem with reading it, an empty table is returned.
     public static HighScoresTable loadFromFile(File fileName) {
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -144,14 +140,14 @@ class HighScoresTable {
             }
             fileReader.close();
 
-            HighScoresTable table = new HighScoresTable(3);
+            HighScoresTable table = new HighScoresTable(defaultSize);
 
-            for (ScoreInfo score: scores){
+            for (ScoreInfo score: scores) {
                 table.add(score);
             }
             return table;
         } catch (Exception ex) {
-            return new HighScoresTable(3); // TODO verify
+            return new HighScoresTable(defaultSize);
         }
     }
 }

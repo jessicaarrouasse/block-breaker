@@ -1,6 +1,6 @@
 import javafx.util.Pair;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -8,22 +8,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Blocks definition reader.
+ */
 public class BlocksDefinitionReader {
     private int width = 0;
     private int height = 0;
     private int hitPoints = 0;
     private Color stroke = null;
-//    private Color fill = null;
-//    private Map<Integer, Color> fillK = new HashMap<>();
-//    private String background = null;
-//    private Map<Integer, String> backgroundK = new HashMap<>();
-
     private BlockBackground background = null;
     private Map<Integer, BlockBackground> backgroundK = new HashMap<>();
 
-    //todo need to be static
-    public BlocksFromSymbolsFactory fromReader(Reader reader) {
-        List<String> specs = getSpecs(reader);
+    /**
+     * From reader blocks from symbols factory.
+     *
+     * @param reader the reader
+     * @return the blocks from symbols factory
+     */
+    public static BlocksFromSymbolsFactory fromReader(Reader reader) {
+        BlocksDefinitionReader blockReader = new BlocksDefinitionReader();
+        List<String> specs = blockReader.getSpecs(reader);
 
         Map<String, Integer> spacerWidths = new HashMap<>();
         Map<String, BlockCreator> blockCreators = new HashMap<>();
@@ -35,17 +39,16 @@ public class BlocksDefinitionReader {
             String[] output = line.split(" ");
             String type = output[0];
 
-            switch(type)
-            {
+            switch(type) {
                 case "default":
-                    getDefaults(output);
+                    blockReader.getDefaults(output);
                     break;
                 case "bdef":
-                    Pair<String, BlockCreator> block = getBDef(output);
+                    Pair<String, BlockCreator> block = blockReader.getBDef(output);
                     blockCreators.put(block.getKey(), block.getValue());
                     break;
                 case "sdef":
-                    Pair<String, Integer> spacer = getSDef(output);
+                    Pair<String, Integer> spacer = blockReader.getSDef(output);
                     spacerWidths.put(spacer.getKey(), spacer.getValue());
                     break;
                 default:
@@ -56,6 +59,12 @@ public class BlocksDefinitionReader {
         return new BlocksFromSymbolsFactory(spacerWidths, blockCreators);
     }
 
+    /**
+     * Get specificity for the level.
+     *
+     * @param reader the reader
+     * @return the specs
+     */
     private List<String> getSpecs(Reader reader) {
 
         BufferedReader bufferedReader = new BufferedReader(reader);
@@ -74,6 +83,11 @@ public class BlocksDefinitionReader {
         return specs;
     }
 
+    /**
+     * Get default for the level.
+     *
+     * @param defaults the defaults param
+     */
     private void getDefaults(String[] defaults) {
 
         for (String spec: defaults) {
@@ -90,8 +104,7 @@ public class BlocksDefinitionReader {
                 key = fillN[0] + "-k";
             }
 
-            switch(key)
-            {
+            switch(key) {
                 case "width":
                     this.width = Integer.parseInt(value);
                     break;
@@ -116,22 +129,22 @@ public class BlocksDefinitionReader {
         }
     }
 
-    private boolean isImage(String str) {
-        return str.startsWith("image");
-    }
-
+    /**
+     * Get block definition.
+     *
+     * @param bdef the defaults param
+     * @return the pair symbol-blockCreator
+     */
     private Pair<String, BlockCreator> getBDef(String[] bdef) {
         String symbol = "";
-        int width = this.width;
-        int height = this.height;
-        int hitPoints = this.hitPoints;
-        Color stroke = this.stroke;
-//        Color fill = this.fill;
-//        Map<Integer, Color> fillK = this.fillK;
-//        String background = this.background;
-//        Map<Integer, String> backgroundK = new HashMap<>();
-        BlockBackground background = this.background;
-        Map<Integer, BlockBackground> backgroundK = this.backgroundK;
+        int actualWidth = this.width;
+        int actualHeight = this.height;
+        int actualHitPoints = this.hitPoints;
+        Color actualStroke = this.stroke != null ? new Color(this.stroke.getRGB()) : null;
+
+        BlockBackground actualBackground = this.background != null ? new BlockBackground(this.background) : null;
+        Map<Integer, BlockBackground> actualBackgroundK = new HashMap<>();
+        actualBackgroundK.putAll(this.backgroundK);
 
         for (String spec: bdef) {
             if (!spec.contains(":")) {
@@ -147,42 +160,49 @@ public class BlocksDefinitionReader {
                 key = fillN[0] + "-k";
             }
 
-            switch(key)
-            {
+            switch(key) {
                 case "symbol":
-                    if (value.equals("l")){
-                        int x = 0;
-                    }
                     symbol = value;
                     break;
                 case "width":
-                    width = Integer.parseInt(value);
+                    actualWidth = Integer.parseInt(value);
                     break;
                 case "height":
-                    height = Integer.parseInt(value);
+                    actualHeight = Integer.parseInt(value);
                     break;
                 case "hit_points":
-                    hitPoints = Integer.parseInt(value);
+                    actualHitPoints = Integer.parseInt(value);
                     break;
                 case "fill":
-                    background = new BlockBackground(value);
+                    actualBackground = new BlockBackground(value);
                     break;
                 case "stroke":
-                    stroke = ColorsParser.colorFromString(value);
+                    actualStroke = ColorsParser.colorFromString(value);
                     break;
                 case "fill-k":
-                    backgroundK.put(Integer.parseInt(fillN[1]), new BlockBackground(value));
+                    actualBackgroundK.put(Integer.parseInt(fillN[1]), new BlockBackground(value));
                     break;
                 default:
                     break;
             }
         }
-        return new Pair<>(symbol, new BlockCreatorFactory(width, height, background, hitPoints, backgroundK, stroke));
+        return new Pair<>(symbol, new BlockCreatorFactory(actualWidth,
+                                                          actualHeight,
+                                                          actualBackground,
+                                                          actualHitPoints,
+                                                          actualBackgroundK,
+                                                          actualStroke));
     }
 
+    /**
+     * Get space definition.
+     *
+     * @param sdef the spaces def
+     * @return the pair symbol-width
+     */
     private Pair<String, Integer> getSDef(String[] sdef) {
         String symbol = "";
-        int width = 0;
+        int actualWidth = 0;
 
         for (String spec: sdef) {
             if (!spec.contains(":")) {
@@ -192,19 +212,17 @@ public class BlocksDefinitionReader {
             String key = param[0];
             String value = param[1];
 
-            switch(key)
-            {
+            switch(key) {
                 case "symbol":
                     symbol = value;
                     break;
                 case "width":
-                    width = Integer.parseInt(value);
+                    actualWidth = Integer.parseInt(value);
                     break;
                 default:
                     break;
             }
         }
-
-        return new Pair<>(symbol, width);
+        return new Pair<>(symbol, actualWidth);
     }
 }

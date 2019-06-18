@@ -1,28 +1,33 @@
 import biuoop.DrawSurface;
-
 import javax.imageio.ImageIO;
 import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
+/**
+ * The type Image background.
+ */
 public class ImageBackground implements Sprite {
 
-    private String src;
+    private Image img;
 
+    /**
+     * Instantiates a new Image background.
+     *
+     * @param src the src
+     */
     public ImageBackground(String src) {
-        this.src = src.split("\\(")[1].split("\\)")[0];
+        String imgPath = src.split("\\(")[1].split("\\)")[0];
+        InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(imgPath);
+        try {
+            img = ImageIO.read(is);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
 
     @Override
     public void drawOn(DrawSurface d) {
-
-        Image img = null;
-        try {
-            img = ImageIO.read(new File(src));
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-
         d.drawImage(0, 20, img);
     }
 

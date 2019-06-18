@@ -94,15 +94,15 @@ public class Paddle implements Sprite, Collidable {
 
         //velocity accordind to the collision's point with the paddle
         if (collisionPoint.getX() <= xUpper + this.zones[0]) {
-            return Velocity.fromAngleAndSpeed(-150, ballSpeed);
+            return Velocity.fromAngleAndSpeed(-60, ballSpeed);
         } else if (collisionPoint.getX() <= xUpper + this.zones[1]) {
-            return Velocity.fromAngleAndSpeed(-120, ballSpeed);
+            return Velocity.fromAngleAndSpeed(-30, ballSpeed);
         } else if (collisionPoint.getX() < xUpper + this.zones[2]) {
             return new Velocity(dx, -dy);
         }  else if (collisionPoint.getX() < xUpper + this.zones[3]) {
-            return Velocity.fromAngleAndSpeed(-60, ballSpeed);
+            return Velocity.fromAngleAndSpeed(30, ballSpeed);
         } else {
-            return Velocity.fromAngleAndSpeed(-30, ballSpeed);
+            return Velocity.fromAngleAndSpeed(60, ballSpeed);
         }
 
     }

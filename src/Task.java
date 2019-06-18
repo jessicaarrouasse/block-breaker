@@ -1,4 +1,3 @@
-// TODO javadoc
 /**
  * The interface Task.
  *

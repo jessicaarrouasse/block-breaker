@@ -1,4 +1,3 @@
-//TODO complet javadoc
 
 /**
  * The type Status info.

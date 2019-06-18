@@ -3,8 +3,17 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Level set reader.
+ */
 public class LevelSetReader {
 
+    /**
+     * From reader list.
+     *
+     * @param reader the reader
+     * @return the list
+     */
     public static List<LevelSet> fromReader(Reader reader) {
 
         BufferedReader bufferedReader = new BufferedReader(reader);

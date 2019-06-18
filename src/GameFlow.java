@@ -1,6 +1,6 @@
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class GameFlow {
      * @return the width of the game.
      */
     public int getGuiWidth() {
-        return this.COL;
+        return COL;
     }
 
     /**
@@ -152,6 +152,9 @@ public class GameFlow {
         );
     }
 
+    /**
+     * Run high score.
+     */
     public void runHighScore() {
         this.runner.run(
                 new KeyPressStoppableAnimation(
@@ -162,17 +165,15 @@ public class GameFlow {
         );
     }
 
+    /**
+     * Gets play task.
+     *
+     * @param path the path
+     * @return the play task
+     */
     public Task<Void> getPlayTask(String path) {
-
-        FileReader reader = null;
-
-        try {
-            reader = new FileReader(path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        List<LevelInformation> levels = new LevelSpecificationReader().fromReader(reader);
+        InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(path);
+        List<LevelInformation> levels = new LevelSpecificationReader().fromReader(new InputStreamReader(is));
 
         return new Task<Void>() {
             @Override
@@ -183,20 +184,40 @@ public class GameFlow {
         };
     }
 
+    /**
+     * Gets run submenu task.
+     *
+     * @param subMenu the sub menu
+     * @return the run submenu task
+     */
+    public Task<Void> getRunSubmenuTask(Menu<Task<Void>> subMenu) {
+       return new Task<Void>() {
+            @Override
+            public Void run() {
+                runner.run(subMenu);
+                // wait for user selection
+                Task<Void> task = subMenu.getStatus();
+                task.run();
+                return null;
+            }
+        };
+    }
 
+
+    /**
+     * Run menu.
+     *
+     * @param levelSets the level sets
+     */
     public void runMenu(String levelSets) {
-        Menu<Task<Void>> menu = new MenuAnimation<>(this.gui.getKeyboardSensor(), this.runner);
-        Menu<Task<Void>> levelSetSubMenu = new MenuAnimation<>(this.gui.getKeyboardSensor(), this.runner);
+        Menu<Task<Void>> menu = new MenuAnimation<>(this.gui.getKeyboardSensor());
+        Menu<Task<Void>> levelSetSubMenu = new MenuAnimation<>(this.gui.getKeyboardSensor());
 
-        FileReader reader = null;
-
-        try {
-            reader = new FileReader(levelSets);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(levelSets);
+        if (is == null) {
+            System.exit(0);
         }
-
-        List<LevelSet> sets = LevelSetReader.fromReader(reader);
+        List<LevelSet> sets = LevelSetReader.fromReader(new InputStreamReader(is));
 
         for (LevelSet level: sets) {
             levelSetSubMenu.addSelection(level.getKey(), level.getMessage(), getPlayTask(level.getPath()));
@@ -218,7 +239,9 @@ public class GameFlow {
             }
         };
 
-        menu.addSubMenu("s", "Play", levelSetSubMenu);
+        Task<Void> runSubMenu = getRunSubmenuTask(levelSetSubMenu);
+
+        menu.addSubMenu("s", "Play", runSubMenu);
         menu.addSelection("h", "HighScores", showHighScore);
         menu.addSelection("q", "Quit", quit);
 
@@ -228,6 +251,5 @@ public class GameFlow {
             Task<Void> task = menu.getStatus();
             task.run();
         }
-
     }
 }

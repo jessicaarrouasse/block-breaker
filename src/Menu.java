@@ -23,10 +23,9 @@ public interface Menu<T> extends Animation {
     /**
      * Add sub menu.
      *
-     * @param key     the key
-     * @param message the message
-     * @param subMenu the sub menu
+     * @param key       the key
+     * @param message   the message
+     * @param returnVal the return val
      */
-    void addSubMenu(String key, String message, Menu<T> subMenu);
-
+    void addSubMenu(String key, String message, T returnVal);
 }

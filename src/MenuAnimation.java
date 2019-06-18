@@ -1,20 +1,51 @@
 import biuoop.DrawSurface;
 import biuoop.KeyboardSensor;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * The type Menu animation.
+ *
+ * @param <T> the type parameter
+ */
 public class MenuAnimation<T> implements Menu<T> {
     private List<StatusInfo<T>> options = new ArrayList<>();
-    private List<StatusInfo<Menu<T>>> subMenus = new ArrayList<>();
     private KeyboardSensor sensor;
-    private AnimationRunner runner;
     private T status;
+    private Sprite background;
 
-    public MenuAnimation(KeyboardSensor sensor, AnimationRunner runner) {
+    /**
+     * Instantiates a new Menu animation.
+     *
+     * @param sensor the sensor
+     * @param background the background
+     */
+    public MenuAnimation(KeyboardSensor sensor, Sprite background) {
         this.sensor = sensor;
-        this.runner = runner;
+        this.background = background;
+    }
+
+    /**
+     * Instantiates a new Menu animation with default background.
+     *
+     * @param sensor the sensor
+     */
+    public MenuAnimation(KeyboardSensor sensor) {
+        this.sensor = sensor;
+        this.background = new Sprite() {
+            @Override
+            public void drawOn(DrawSurface d) {
+                d.setColor(Color.ORANGE);
+                d.fillRectangle(0, 0, d.getWidth(), d.getHeight());
+            }
+
+            @Override
+            public void timePassed() {
+            }
+        };
     }
 
 
@@ -29,54 +60,34 @@ public class MenuAnimation<T> implements Menu<T> {
     }
 
     @Override
-    public void addSubMenu(String key, String message, Menu<T> subMenu) {
-        subMenus.add(new StatusInfo<>(key, message, subMenu));
-
-        Task<T> runSubMenu = new Task<T>() {
-            @Override
-            public T run() {
-                runner.run(subMenu);
-                // wait for user selection
-                Task<Void> task = (Task<Void>)subMenu.getStatus();
-                task.run();
-                return null;
-            }
-        };
-        addSelection(key, message, (T)runSubMenu);
+    public void addSubMenu(String key, String message, T returnVal) {
+        options.add(new StatusInfo<>(key, message, returnVal));
     }
 
     @Override
     public void doOneFrame(DrawSurface d) {
-        //todo add double click
         int optionNumber = 1;
-        d.drawText(d.getWidth() / 2, 80, "Menu", 32);
+        if (background != null) {
+            background.drawOn(d);
+        }
+        d.setColor(Color.BLACK);
+        d.drawText((d.getWidth() / 2) - 50, 80, "Menu", 32);
 
-        for (StatusInfo<T> status: options) {
-            String message = optionNumber + ". " + status.getMessage() + " => press " + status.getKey();
-            d.drawText(d.getWidth() / 2, 100 + (20 * optionNumber), message, 22);
+        for (StatusInfo<T> option: options) {
+            String message = optionNumber + ". " + option.getMessage() + " (" + option.getKey() + ")";
+            d.drawText((d.getWidth() / 2) - 150, 100 + (20 * optionNumber), message, 22);
             optionNumber++;
         }
-//        for (StatusInfo<Menu<T>> status: subMenus) {
-//            String message = optionNumber + ". " + status.getMessage() + " => press " + status.getKey();
-//            d.drawText(d.getWidth() / 2, 100 + (20 * optionNumber), message, 22);
-//            optionNumber++;
-//        }
     }
 
     @Override
     public boolean shouldStop() {
-        for (StatusInfo<T> status: options) {
-            if (this.sensor.isPressed(status.getKey())) {
-                this.status = status.getReturnVal();
+        for (StatusInfo<T> option: options) {
+            if (this.sensor.isPressed(option.getKey())) {
+                this.status = option.getReturnVal();
                 return true;
             }
         }
-//        for (StatusInfo<Menu<T>> subMenu: subMenus) {
-//            if (this.sensor.isPressed(subMenu.getKey())) {
-//
-//                return true;
-//            }
-//        }
         return false;
     }
 }

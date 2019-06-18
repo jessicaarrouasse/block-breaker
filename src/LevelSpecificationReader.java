@@ -3,23 +3,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Reader;
 
+/**
+ * The type Level specification reader.
+ */
 public class LevelSpecificationReader {
 
+    /**
+     * From reader list.
+     *
+     * @param reader the reader
+     * @return the list
+     */
     public List<LevelInformation> fromReader(Reader reader) {
         List<LevelInformation> levels = new ArrayList<>();
 
-            List<List<String>> l = getLevels(reader);
-            for (List<String> lev: l) {
-                for (String s: lev) {
-                    System.out.println(s);
-                }
-                System.out.println("-------------");
-                levels.add(getLevelInformation(lev));
-            }
+        List<List<String>> levelsList = getLevels(reader);
+        for (List<String> level: levelsList) {
+            levels.add(getLevelInformation(level));
+        }
 
         return levels;
     }
 
+    /**
+     * From reader list.
+     *
+     * @param reader the reader
+     * @return the list
+     */
     private List<List<String>> getLevels(Reader reader) {
 
         BufferedReader bufferedReader = new BufferedReader(reader);
@@ -46,6 +57,12 @@ public class LevelSpecificationReader {
         return levels;
     }
 
+    /**
+     * Get the level information.
+     *
+     * @param level the level
+     * @return the level information
+     */
     private LevelInformation getLevelInformation(List<String> level) {
         String levelName = "";
         List<Velocity> velocities = new ArrayList<>();
@@ -59,10 +76,10 @@ public class LevelSpecificationReader {
         String blockDefinitionsFilename = "";
         List<String> lineBlocks = new ArrayList<>();
         boolean shouldRecordBlocks = false;
-
+        int paramsNumber = 10;
 
         for (String line: level) {
-            if (shouldRecordBlocks == true) {
+            if (shouldRecordBlocks) {
                 lineBlocks.add(line);
                 continue;
             }
@@ -82,53 +99,81 @@ public class LevelSpecificationReader {
             String key = output[0];
             String value = output[1];
 
-            switch(key)
-            {
+            switch(key) {
                 case "level_name":
                     levelName = value;
+                    paramsNumber--;
                     break;
                 case "paddle_speed":
                     paddleSpeed = Integer.parseInt(value);
+                    paramsNumber--;
                     break;
                 case "paddle_width":
                     paddleWidth = Integer.parseInt(value);
+                    paramsNumber--;
                     break;
                 case "ball_velocities":
                     velocities = getVelocities(value);
+                    paramsNumber--;
                     break;
                 case "background":
                     background = value;
+                    paramsNumber--;
                     break;
                 case "blocks_start_x":
                     blocksStartX = Integer.parseInt(value);
+                    paramsNumber--;
                     break;
                 case "blocks_start_y":
                     blocksStartY = Integer.parseInt(value);
+                    paramsNumber--;
                     break;
                 case "row_height":
                     rowHeight = Integer.parseInt(value);
+                    paramsNumber--;
                     break;
                 case "block_definitions":
                     blockDefinitionsFilename = value;
+                    paramsNumber--;
                     break;
                 case "num_blocks":
                     numBlocks = Integer.parseInt(value);
+                    paramsNumber--;
                     break;
                 default:
                     break;
             }
         }
 
-        return new LevelInformationFromFile(velocities, paddleSpeed, paddleWidth, levelName, background, blocksStartX, blocksStartY, rowHeight, blockDefinitionsFilename, lineBlocks, numBlocks);
+        if (paramsNumber > 0) {
+            System.out.println("Bad level specs");
+            System.exit(0);
+        }
+
+        return new LevelInformationFromFile(velocities,
+                new LevelDetails(paddleSpeed, paddleWidth, levelName, background),
+                new Point(blocksStartX, blocksStartY),
+                rowHeight,
+                blockDefinitionsFilename,
+                lineBlocks,
+                numBlocks);
     }
 
+
+    /**
+     * Get the velocities.
+     *
+     * @param line the line
+     * @return the velocities
+     */
     private List<Velocity> getVelocities(String line) {
         List<Velocity> velocities = new ArrayList<>();
         String[] output = line.split(" ");
 
         for (String v: output) {
             String[] angleAndSpeed = v.split(",");
-            velocities.add(Velocity.fromAngleAndSpeed(Double.parseDouble(angleAndSpeed[0]), Double.parseDouble(angleAndSpeed[1])));
+            velocities.add(Velocity.fromAngleAndSpeed(Double.parseDouble(angleAndSpeed[0]),
+                                                      Double.parseDouble(angleAndSpeed[1])));
         }
         return velocities;
     }

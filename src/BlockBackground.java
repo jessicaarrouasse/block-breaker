@@ -1,40 +1,70 @@
 import biuoop.DrawSurface;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
-import java.io.File;
+import java.awt.Color;
+import java.awt.Image;
 import java.io.IOException;
+import java.io.InputStream;
 
+/**
+ * The type Block background.
+ */
 public class BlockBackground {
-    private String image;
+    private Image image;
     private Color color;
-    private String xxx;
 
+    /**
+     * Instantiates a new Block background.
+     *
+     * @param background the background
+     */
     public BlockBackground(String background) {
-        xxx = background;
         if (background.startsWith("color")) {
             color = ColorsParser.colorFromString(background);
         } else if (background.startsWith("image")) {
-            this.image = background.split("\\(")[1].split("\\)")[0];
-
-        }
-    }
-
-    public BlockBackground(Color color) {
-        this.color = color;
-    }
-
-
-    public void drawOn(DrawSurface d, int x, int y, int w, int h) {
-        if (this.image != null) {
-            Image img = null;
+            String imgPath = background.split("\\(")[1].split("\\)")[0];
+            InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(imgPath);
             try {
-                img = ImageIO.read(new File(this.image));
+                image = ImageIO.read(is);
             } catch (IOException e) {
                 System.out.println(e);
             }
 
-            d.drawImage(x, y, img);
+        }
+    }
+
+    /**
+     * Instantiates a new Block background.
+     *
+     * @param color the color
+     */
+    public BlockBackground(Color color) {
+        this.color = color;
+    }
+
+    /**
+     * Instantiates a new Block background.
+     *
+     * @param bg the bg
+     */
+    public BlockBackground(BlockBackground bg) {
+        this.image = bg.image;
+        this.color = bg.color;
+    }
+
+
+    /**
+     * Draw on.
+     *
+     * @param d the d
+     * @param x the x
+     * @param y the y
+     * @param w the w
+     * @param h the h
+     */
+    public void drawOn(DrawSurface d, int x, int y, int w, int h) {
+        if (image != null) {
+            d.drawImage(x, y, image);
         } else {
             d.setColor(this.color);
             d.fillRectangle(x, y, w, h);

@@ -1,18 +1,26 @@
-import java.awt.*;
+import java.awt.Color;
 
+/**
+ * The type Colors parser.
+ */
 public class ColorsParser {
 
+    /**
+     * Color from string.
+     *
+     * @param str the str
+     * @return the color
+     */
     public static java.awt.Color colorFromString(String str) {
         if (str.contains("RGB")) {
             String[] output = str.split(",");
             String r = output[0].split("\\(")[2];
             String g = output[1];
             String b = output[2].split("\\)")[0];
-            return new Color(Integer.parseInt(r),Integer.parseInt(g),Integer.parseInt(b));
+            return new Color(Integer.parseInt(r), Integer.parseInt(g), Integer.parseInt(b));
         } else {
             String color = str.split("\\(")[1].split("\\)")[0];
-            switch(color)
-            {
+            switch(color) {
                 case "black":
                     return Color.black;
                 case "blue":

@@ -1,6 +1,9 @@
-import java.awt.*;
+import java.awt.Color;
 import java.util.Map;
 
+/**
+ * The type Block creator factory.
+ */
 public class BlockCreatorFactory implements BlockCreator {
 
     private int width;
@@ -10,7 +13,22 @@ public class BlockCreatorFactory implements BlockCreator {
     private int hitPoints;
     private Map<Integer, BlockBackground> fillK;
 
-    public BlockCreatorFactory(int width, int height, BlockBackground fill, int hitPoints, Map<Integer, BlockBackground> fillK, Color stroke) {
+    /**
+     * Instantiates a new Block creator factory.
+     *
+     * @param width     the width
+     * @param height    the height
+     * @param fill      the fill
+     * @param hitPoints the hit points
+     * @param fillK     the fill k
+     * @param stroke    the stroke
+     */
+    public BlockCreatorFactory(int width,
+                               int height,
+                               BlockBackground fill,
+                               int hitPoints,
+                               Map<Integer, BlockBackground> fillK,
+                               Color stroke) {
         this.width = width;
         this.height = height;
         this.fill = fill;

@@ -1,10 +1,5 @@
-import java.awt.*;
-
+import java.awt.Color;
 import biuoop.DrawSurface;
-
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -23,10 +18,27 @@ public class Block implements Collidable, Sprite, HitNotifier {
     private BlockBackground background;
     private Color stroke;
     private List<HitListener> hitListeners;
-    Map<Integer, BlockBackground> fillK;
+    private Map<Integer, BlockBackground> fillK;
 
 
-    public Block(Point upperLeft, double width, double height, BlockBackground background, int hits, Map<Integer, BlockBackground> fillK, Color stroke) {
+    /**
+     * Instantiates a new Block.
+     *
+     * @param upperLeft  the upper left
+     * @param width      the width
+     * @param height     the height
+     * @param background the background
+     * @param hits       the hits
+     * @param fillK      the fill k
+     * @param stroke     the stroke
+     */
+    public Block(Point upperLeft,
+                 double width,
+                 double height,
+                 BlockBackground background,
+                 int hits,
+                 Map<Integer, BlockBackground> fillK,
+                 Color stroke) {
         this.position = new Rectangle(upperLeft, width, height);
         this.background = background;
         this.hitPoints = hits;
@@ -35,6 +47,15 @@ public class Block implements Collidable, Sprite, HitNotifier {
         this.stroke = stroke;
     }
 
+    /**
+     * Instantiates a new Block.
+     *
+     * @param upperLeft  the upper left
+     * @param width      the width
+     * @param height     the height
+     * @param background the background
+     * @param hits       the hits
+     */
     public Block(Point upperLeft, double width, double height, BlockBackground background, int hits) {
         this(upperLeft, width, height, background, hits, new HashMap<>(), null);
     }
@@ -42,10 +63,10 @@ public class Block implements Collidable, Sprite, HitNotifier {
     /**
      * Second constructor with a default initial hit points number.
      *
-     * @param upperLeft upperLeft point of the block
-     * @param width     width of the block
-     * @param height    height of the block
-     * @param background     background of the block
+     * @param upperLeft  upperLeft point of the block
+     * @param width      width of the block
+     * @param height     height of the block
+     * @param background background of the block
      */
     public Block(Point upperLeft, double width, double height, BlockBackground background) {
         this(upperLeft, width, height, background, 1, new HashMap<>(), null);
@@ -96,9 +117,9 @@ public class Block implements Collidable, Sprite, HitNotifier {
         int w = (int) this.position.getWidth();
         int h = (int) this.position.getHeight();
         // draw the block
-        BlockBackground background = fillK.get(this.hitPoints);
-        if (background != null) {
-            background.drawOn(surface, x, y, w, h);
+        BlockBackground backgroundToDraw = fillK.get(this.hitPoints);
+        if (backgroundToDraw != null) {
+            backgroundToDraw.drawOn(surface, x, y, w, h);
         } else {
             this.background.drawOn(surface, x, y, w, h);
         }

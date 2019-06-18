@@ -1,10 +1,17 @@
 import biuoop.DrawSurface;
+import java.awt.Color;
 
-import java.awt.*;
-
+/**
+ * The type Color background.
+ */
 public class ColorBackground implements Sprite {
     private Color color;
 
+    /**
+     * Instantiates a new Color background.
+     *
+     * @param color the color
+     */
     public ColorBackground(Color color) {
         this.color = color;
     }
