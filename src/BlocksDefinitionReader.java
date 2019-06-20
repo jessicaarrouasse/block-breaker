@@ -1,4 +1,3 @@
-import javafx.util.Pair;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -7,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.AbstractMap;
 /**
  * The type Blocks definition reader.
  */
@@ -44,11 +43,11 @@ public class BlocksDefinitionReader {
                     blockReader.getDefaults(output);
                     break;
                 case "bdef":
-                    Pair<String, BlockCreator> block = blockReader.getBDef(output);
+                    Map.Entry<String, BlockCreator> block = blockReader.getBDef(output);
                     blockCreators.put(block.getKey(), block.getValue());
                     break;
                 case "sdef":
-                    Pair<String, Integer> spacer = blockReader.getSDef(output);
+                    Map.Entry<String, Integer> spacer = blockReader.getSDef(output);
                     spacerWidths.put(spacer.getKey(), spacer.getValue());
                     break;
                 default:
@@ -135,7 +134,7 @@ public class BlocksDefinitionReader {
      * @param bdef the defaults param
      * @return the pair symbol-blockCreator
      */
-    private Pair<String, BlockCreator> getBDef(String[] bdef) {
+    private Map.Entry<String, BlockCreator> getBDef(String[] bdef) {
         String symbol = "";
         int actualWidth = this.width;
         int actualHeight = this.height;
@@ -186,7 +185,7 @@ public class BlocksDefinitionReader {
                     break;
             }
         }
-        return new Pair<>(symbol, new BlockCreatorFactory(actualWidth,
+        return new AbstractMap.SimpleImmutableEntry<>(symbol, new BlockCreatorFactory(actualWidth,
                                                           actualHeight,
                                                           actualBackground,
                                                           actualHitPoints,
@@ -200,7 +199,7 @@ public class BlocksDefinitionReader {
      * @param sdef the spaces def
      * @return the pair symbol-width
      */
-    private Pair<String, Integer> getSDef(String[] sdef) {
+    private Map.Entry<String, Integer> getSDef(String[] sdef) {
         String symbol = "";
         int actualWidth = 0;
 
@@ -223,6 +222,6 @@ public class BlocksDefinitionReader {
                     break;
             }
         }
-        return new Pair<>(symbol, actualWidth);
+        return new AbstractMap.SimpleImmutableEntry<>(symbol, actualWidth);
     }
 }
